@@ -1,0 +1,33 @@
+<div
+  #shell
+  class="status-banner"
+  [class.status-banner--visible]="status.visible()"
+  role="status"
+  [attr.aria-hidden]="!status.visible()"
+>
+  <div class="status-banner__row">
+    <span class="status-banner__icon" aria-hidden="true"><lpg-icon name="info" /></span>
+    <p class="status-banner__text">
+      <span class="status-banner__message" i18n="@@status.banner.text"
+        >Visitor statistics are temporarily unavailable. The website itself is not affected.</span
+      >
+      <button
+        type="button"
+        class="link status-banner__more"
+        (click)="learnMore()"
+        i18n="@@status.banner.more.cta"
+      >
+        Learn more
+      </button>
+    </p>
+    <button
+      type="button"
+      class="status-banner__close"
+      (click)="close()"
+      i18n-aria-label="@@status.banner.close"
+      aria-label="Dismiss"
+    >
+      ✕
+    </button>
+  </div>
+</div>

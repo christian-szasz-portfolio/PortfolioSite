@@ -1,0 +1,21 @@
+<adm-panel heading="Operations">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Operation</th>
+        <th scope="col" class="table__number">Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (operation of operations(); track operation.name) {
+        <tr>
+          <td>
+            <span class="swatch" [style.background]="colour(operation.name)"></span>
+            {{ operation.label }}
+          </td>
+          <td class="table__number">{{ operation.count }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</adm-panel>

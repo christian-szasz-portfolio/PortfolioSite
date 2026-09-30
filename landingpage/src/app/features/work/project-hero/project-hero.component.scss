@@ -1,0 +1,42 @@
+.project-hero {
+  padding-block: var(--space-7) var(--space-8);
+
+  &__body {
+    display: grid;
+    // A bare grid track floors at the media label's width, wider than a phone
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+    margin-top: var(--space-6);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  &__languages {
+    font-family: var(--font-mono);
+  }
+
+  // A row, not inline boxes: on a text baseline, two different icons set the pills 2px apart
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  @media (width >= 62rem) {
+    &__body {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      align-items: center;
+      gap: var(--space-8);
+    }
+  }
+}

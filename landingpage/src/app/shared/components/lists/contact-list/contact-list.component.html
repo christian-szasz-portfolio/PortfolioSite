@@ -1,0 +1,26 @@
+<ul class="contact">
+  @for (item of items(); track item.row.id) {
+    <li class="contact__item">
+      <span class="contact__key">
+        @if (item.icon; as icon) {
+          <span class="contact__icon"><lpg-icon [name]="icon" /></span>
+        }
+        {{ item.row.key }}
+      </span>
+      <span class="contact__value">
+        @if (item.row.parts; as parts) {
+          @for (part of parts; track part.code) {
+            <span class="contact__part">
+              <common-flag [code]="part.code" />
+              {{ part.text }}
+            </span>
+          }
+        } @else if (item.row.href) {
+          <a class="link" [href]="item.row.href">{{ item.row.text }}</a>
+        } @else {
+          {{ item.row.text }}
+        }
+      </span>
+    </li>
+  }
+</ul>

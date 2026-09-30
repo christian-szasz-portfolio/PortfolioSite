@@ -1,0 +1,17 @@
+<nav class="pager" aria-label="Other projects" i18n-aria-label="@@pager.label">
+  @if (previous(); as item) {
+    <a class="pager__link pager__link--previous" [routerLink]="['/work', item.slug]">
+      <span class="pager__direction" i18n="@@pager.previous.label">Previous</span>
+      <span class="pager__title">{{ item.title }}</span>
+      <span class="pager__tagline">{{ item.tagline }}</span>
+    </a>
+  }
+
+  @if (next(); as item) {
+    <a class="pager__link pager__link--next" [routerLink]="['/work', item.slug]">
+      <span class="pager__direction" i18n="@@pager.next.label">Next</span>
+      <span class="pager__title">{{ item.title }}</span>
+      <span class="pager__tagline">{{ item.tagline }}</span>
+    </a>
+  }
+</nav>

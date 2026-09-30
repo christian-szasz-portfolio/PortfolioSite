@@ -1,0 +1,52 @@
+.cv {
+  // White headings on the blue sidebar: near-black lands at 2.87:1, under the 3:1 floor
+  --cv-blue: #0a66c2;
+  --cv-blue-deep: #004182;
+  --cv-blue-tint: #d8eafc;
+
+  --cv-ink: #231f20;
+  --cv-body: #6f6f6f;
+  --cv-muted: #9b9b9b;
+  --cv-paper: #ffffff;
+  --cv-title: #4a4a4a;
+  --cv-faint: #c9c9c9;
+  --cv-photo-bg: #cfe3f7;
+
+  --cv-font: 'Poppins', 'Montserrat', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --cv-page-width: 210mm;
+  --cv-page-height: 297mm;
+  --cv-sidebar-width: 35%;
+
+  --cv-pad-side: 7mm;
+  --cv-pad-main: 9mm;
+
+  // A printed document must never invert with the reader's theme
+  color-scheme: only light;
+
+  display: grid;
+  grid-template-columns: var(--cv-sidebar-width) 1fr;
+  width: var(--cv-page-width);
+  height: var(--cv-page-height);
+  min-height: var(--cv-page-height);
+  overflow: hidden;
+  background-color: var(--cv-paper);
+  box-shadow: 0 2mm 8mm rgb(0 0 0 / 28%);
+  color: var(--cv-body);
+  font-family: var(--cv-font);
+  font-size: 8pt;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+
+  // Romanian and German run longer than English, so a size smaller keeps them to one page
+  &:lang(ro),
+  &:lang(de) {
+    font-size: 7.6pt;
+  }
+
+  @media print {
+    box-shadow: none;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+}

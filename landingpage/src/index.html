@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Christian-Ioan Szasz</title>
+    <meta name="author" content="Christian-Ioan Szasz" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0b1017" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)" />
+
+    <base href="/" />
+
+    <!-- IE cannot boot the app, and conditional comments miss IE10/11, so documentMode redirects first -->
+    <script>
+      (function () {
+        if (document.documentMode || /MSIE |Trident\//.test(navigator.userAgent)) {
+          window.location.replace('/pages/unsupported.html');
+        }
+      })();
+    </script>
+    <!--[if lte IE 9]>
+      <meta http-equiv="refresh" content="0; url=/pages/unsupported.html" />
+    <![endif]-->
+
+    <!-- SVG first for anything current, the .ico as the fallback -->
+    <link rel="icon" href="icons/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="icons/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+    <script>
+      /* Applied before first paint: the app boots after paint, so any later placement flashes
+         the wrong theme. */
+      (function () {
+        try {
+          var stored = localStorage.getItem('cs-theme');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.dataset.theme = stored;
+          }
+        } catch (e) {
+          /* private mode: keep the default */
+        }
+      })();
+    </script>
+  </head>
+  <body class="page">
+    <lpg-root></lpg-root>
+  </body>
+</html>

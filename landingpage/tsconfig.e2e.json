@@ -1,0 +1,9 @@
+/* The browser suite: held to the same strict compiler as the app, run by Playwright rather than Angular. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["e2e/**/*.ts", "playwright.config.ts"]
+}

@@ -1,0 +1,63 @@
+# Editor configuration, see https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.ts]
+quote_type = single
+ij_typescript_use_double_quotes = false
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+
+# C# (the .NET counter API in analytics/ and analytics.tests/)
+[*.cs]
+indent_size = 4
+
+# Code-style preferences (the built-in IDExxxx analysers), so the IDE and the build agree.
+# Keep the `this.` qualifier everywhere: the IDE must never offer to remove it (matches SA1101).
+dotnet_style_qualification_for_field = true:warning
+dotnet_style_qualification_for_property = true:warning
+dotnet_style_qualification_for_method = true:warning
+dotnet_style_qualification_for_event = true:warning
+
+# File-scoped namespaces, as written.
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_using_directive_placement = inside_namespace:warning
+
+# Explicit types, as written: no `var` nudges either way.
+csharp_style_var_for_built_in_types = false:silent
+csharp_style_var_when_type_is_apparent = false:silent
+csharp_style_var_elsewhere = false:silent
+
+# StyleCop.Analyzers. The reason it is here: SA1101 makes the `this.` qualifier
+# required, so the qualifier is never reported as removable. Keep it on.
+dotnet_diagnostic.SA1101.severity = warning
+
+# StyleCop rules switched off where they clash with this project's settled style:
+dotnet_diagnostic.SA0001.severity = none   # XML documentation output is not generated or enforced
+dotnet_diagnostic.SA1200.severity = warning # using directives sit inside the file-scoped namespace
+
+# A namespace follows the folder it sits in. The test project was flat until its files were
+# grouped to mirror the four source projects, and a convention nothing checks drifts back.
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = warning
+dotnet_diagnostic.SA1201.severity = none   # members are ordered for reading, not strictly by kind
+dotnet_diagnostic.SA1204.severity = none   # static helpers sit beside the members they serve
+dotnet_diagnostic.SA1402.severity = warning # one type per file, as the folder layout assumes
+dotnet_diagnostic.SA1633.severity = none   # this repo uses no file licence headers
+dotnet_diagnostic.SA1649.severity = warning # follows from SA1402: the file is named for its type
+
+# Documentation is not enforced here (this is why SA0001 above is off too): turn off the
+# whole StyleCop documentation category (SA1600/SA1611/SA1615 and the rest).
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
+
+# Primary constructors everywhere, with the parameter assigned to an explicit private field
+# so the `this.` qualifier this project relies on still reads the same.
+dotnet_diagnostic.IDE0290.severity = warning

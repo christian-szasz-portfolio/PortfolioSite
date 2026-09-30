@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/analytics.tests/">
+    <Project Path="analytics.tests/Analytics.Tests.csproj" />
+  </Folder>
+  <Folder Name="/admin.tests/">
+    <Project Path="admin.tests/Admin.Tests.csproj" />
+  </Folder>
+  <Folder Name="/admin/">
+    <Project Path="admin/Admin.Api/Admin.Api.csproj" />
+  </Folder>
+  <Folder Name="/analytics/">
+    <Project Path="analytics/Analytics.Api/Analytics.Api.csproj" />
+    <Project Path="analytics/Analytics.Domain/Analytics.Domain.csproj" />
+    <Project Path="analytics/Analytics.Infrastructure/Analytics.Infrastructure.csproj" />
+    <Project Path="analytics/Analytics.Tools/Analytics.Tools.csproj" />
+  </Folder>
+</Solution>

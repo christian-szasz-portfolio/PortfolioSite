@@ -1,0 +1,22 @@
+<div class="modal modal--dialog">
+  <div class="modal__chrome">
+    <h2 class="modal__title" [id]="headingId()">{{ heading() }}</h2>
+
+    <div class="modal__tools">
+      <ng-content select="[modal-tools]" />
+
+      <button
+        class="modal__close"
+        type="button"
+        [attr.aria-label]="closeLabel()"
+        (click)="onClose()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="glyphs.close" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <ng-content />
+
+  <p class="modal__hint"><ng-content select="[modal-hint]" /></p>
+</div>

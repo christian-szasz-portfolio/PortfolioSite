@@ -1,0 +1,7 @@
+.unsupported {
+  &__note {
+    // Seen only before the redirect, or with no scripting, so it stays plain
+    text-align: center;
+    color: var(--ink-muted);
+  }
+}

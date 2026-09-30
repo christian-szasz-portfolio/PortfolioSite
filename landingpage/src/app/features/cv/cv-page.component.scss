@@ -1,0 +1,13 @@
+// The desk the sheet sits on, which is the page rather than the document
+.cv-desk {
+  display: flex;
+  justify-content: center;
+  padding: 8mm 0;
+  background-color: #d9d9d9;
+
+  @media print {
+    display: block;
+    padding: 0;
+    background-color: transparent;
+  }
+}

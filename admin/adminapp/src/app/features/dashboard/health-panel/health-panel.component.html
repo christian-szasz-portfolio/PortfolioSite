@@ -1,0 +1,80 @@
+<adm-panel
+  heading="API health"
+  note="Asked when you press it, because a sleeping host wakes to answer."
+>
+  <div class="health">
+    <div class="health__line">
+      <span
+        class="health__status"
+        [class.health__status--good]="status() === 'Healthy'"
+        [class.health__status--warn]="status() === 'Degraded' || overdue()"
+        [class.health__status--bad]="status() === 'Unhealthy'"
+      >
+        {{ status() }}
+      </span>
+
+      <button class="health__button" type="button" [disabled]="busy()" (click)="check.emit()">
+        {{ busy() ? 'Asking…' : 'Check now' }}
+      </button>
+    </div>
+
+    @if (health(); as report) {
+      @if (report.problem; as problem) {
+        <p class="health__problem">{{ problem }}</p>
+      }
+
+      @if (report.checks.length > 0) {
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Check</th>
+              <th scope="col">Says</th>
+              <th scope="col" class="table__number">Took</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (check of report.checks; track check.name) {
+              <tr>
+                <td>{{ check.name }}</td>
+                <td [class.table__warn]="check.status !== 'Healthy'">
+                  {{ check.note ?? check.status }}
+                </td>
+                <td class="table__number">{{ check.ms }} ms</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      @if (report.workers.length > 0) {
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Worker</th>
+              <th scope="col">Last ran</th>
+              <th scope="col">Expected</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (worker of report.workers; track worker.name) {
+              <tr>
+                <td>{{ worker.name }}</td>
+                <td [class.table__warn]="worker.overdue">
+                  {{ ago(worker.ageSeconds) }}{{ worker.overdue ? ' · overdue' : '' }}
+                </td>
+                <td>{{ every(worker.periodSeconds) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else if (report.reachable) {
+        <p class="health__problem">
+          No worker has reported yet. A worker that never started leaves no beat, so check the names
+          above are all there.
+        </p>
+      }
+    } @else {
+      <p class="health__problem">Not asked yet.</p>
+    }
+  </div>
+</adm-panel>

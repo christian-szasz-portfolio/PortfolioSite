@@ -1,0 +1,20 @@
+<section class="section section--work" id="work" lpgSectionSpy="work">
+  <div class="section__inner">
+    <lpg-section-header
+      i18n-eyebrow="@@work.eyebrow.label"
+      eyebrow="The work"
+      i18n-heading="@@work.title"
+      heading="Four things I built to understand something"
+      i18n-lede="@@work.text"
+      lede="Not code samples: a compiler with an emulator, a full web application, a desktop CPU simulator and this site, each building clean with its own test suite."
+    />
+
+    <lpg-carousel i18n-label="@@work.carousel.label" label="Projects">
+      @for (project of projects; track project.slug) {
+        <div class="carousel-slide work__slide">
+          <lpg-project-card [project]="project" [first]="$first" [variant]="variants.Slide" />
+        </div>
+      }
+    </lpg-carousel>
+  </div>
+</section>

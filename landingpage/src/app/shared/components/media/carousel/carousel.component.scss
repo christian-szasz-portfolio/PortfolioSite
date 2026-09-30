@@ -1,0 +1,96 @@
+.carousel {
+  display: block;
+
+  &__track {
+    display: flex;
+    gap: var(--space-6);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    // The track is focusable, so the ring has to clear the slides.
+    scroll-padding-inline: var(--space-1);
+    padding-block: var(--space-2);
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  &__button {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--ink);
+    transition:
+      border-color var(--duration) var(--ease),
+      color var(--duration) var(--ease),
+      opacity var(--duration) var(--ease);
+
+    &:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  &__icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-end: auto;
+  }
+
+  &__dot {
+    // The mark stays 8px; the button around it is what a finger aims at.
+    display: grid;
+    place-items: center;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+
+    &::before {
+      content: '';
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      border-radius: 999px;
+      background-color: var(--line-strong);
+      // Stretched rather than widened: every button keeps its box, so marking the current
+      // slide leaves the row's geometry alone instead of reflowing it every frame.
+      transition:
+        transform var(--duration) var(--ease),
+        background-color var(--duration) var(--ease);
+    }
+
+    &.is-current::before {
+      transform: scaleX(3);
+      background-color: var(--accent);
+    }
+  }
+}

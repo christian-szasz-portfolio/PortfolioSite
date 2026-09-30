@@ -1,0 +1,20 @@
+<nav class="crumbs" i18n-aria-label="@@breadcrumbs.label" aria-label="Breadcrumb">
+  <ol class="crumbs__list">
+    @for (crumb of trail(); track crumb.label) {
+      <li class="crumbs__item">
+        @if (crumb.path; as path) {
+          <a class="crumbs__link" [routerLink]="path" [fragment]="crumb.fragment">{{
+            crumb.label
+          }}</a>
+          <span class="crumbs__divider" aria-hidden="true">
+            <svg class="crumbs__chevron" viewBox="0 0 24 24">
+              <path [attr.d]="glyphs.chevron" />
+            </svg>
+          </span>
+        } @else {
+          <span class="crumbs__current" aria-current="page">{{ crumb.label }}</span>
+        }
+      </li>
+    }
+  </ol>
+</nav>

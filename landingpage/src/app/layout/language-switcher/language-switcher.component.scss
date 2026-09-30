@@ -1,0 +1,133 @@
+.lang {
+  position: relative;
+  // Above the page beneath it, which follows in source order
+  z-index: 20;
+
+  &__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    transition:
+      background-color 200ms var(--ease),
+      color 200ms var(--ease);
+
+    &:hover,
+    &[aria-expanded='true'] {
+      background-color: var(--surface-2);
+      color: var(--ink);
+    }
+  }
+
+  &__caret {
+    width: 0;
+    height: 0;
+    border-right: 0.25rem solid transparent;
+    border-left: 0.25rem solid transparent;
+    border-top: 0.3rem solid currentcolor;
+  }
+
+  &__menu {
+    position: absolute;
+    inset-inline-end: 0;
+    top: calc(100% + 0.4rem);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    min-width: 10rem;
+    padding: 0.3rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background-color: var(--surface-2);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 45%);
+  }
+
+  &__item {
+    display: flex;
+    // Centred rather than baseline: the flag has no text baseline to share
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition: background-color 200ms var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--surface-3);
+    }
+
+    // The language already being read, marked rather than removed
+    &[aria-current] {
+      color: var(--accent);
+      font-weight: 650;
+    }
+  }
+
+  &__item-code {
+    min-width: 1.6rem;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  &__plain {
+    display: none;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__plain-item {
+    display: inline-block;
+    padding: 0.45rem 0.55rem;
+    border-radius: 999px;
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--surface-2);
+      color: var(--ink);
+    }
+
+    &[aria-current] {
+      color: var(--accent);
+    }
+  }
+}
+
+// Without scripting the menu can never open, so the languages are plain links instead
+@media (scripting: none) {
+  .lang {
+    &__trigger {
+      display: none;
+    }
+
+    &__plain {
+      display: flex;
+    }
+  }
+}
+
+// Under 360px the code will not fit; the flag and the aria-label carry it
+@media (width < 22.5rem) {
+  .lang {
+    &__code {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,59 @@
+/* Strict on purpose, and then some. The point of moving this site onto Angular
+   was to let the compiler carry rules that were previously only conventions.
+   `any` is not merely discouraged here: with `strict` on there is no implicit
+   route to it, and the ESLint config makes the explicit route an error too. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    /* --- the strict family, in full --- */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+
+    /* --- beyond strict: the checks that catch real defects --- */
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "skipLibCheck": true,
+    "isolatedModules": true,
+
+    /* The site address is one JSON file that both the app and site.tools.mjs read. */
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    /* Templates are code, and are type-checked as such. */
+    "strictTemplates": true,
+    "typeCheckHostBindings": true,
+    "strictStandalone": true,
+    "extendedDiagnostics": {
+      "defaultCategory": "error"
+    }
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.spec.json" },
+    { "path": "./tsconfig.e2e.json" }
+  ]
+}

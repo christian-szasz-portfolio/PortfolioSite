@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Christian-Ioan Szasz">
+    <!-- The same mark BrandMarkComponent draws, on the accent tile the header
+         gives it: three stack frames narrowing as they descend, tapped by a bus
+         line into a register cell. Colours are stated rather than inherited,
+         because a favicon has no page to take them from. -->
+    <rect width="32" height="32" rx="7" fill="#0a66c2"/>
+    <g fill="#ffffff">
+        <rect x="5" y="7" width="15" height="4" rx="2"/>
+        <rect x="5" y="14" width="11" height="4" rx="2"/>
+        <rect x="5" y="21" width="7" height="4" rx="2"/>
+    </g>
+    <path d="M25 6.5v19M18 16h4" fill="none" stroke="#ffffff" stroke-width="2"
+          stroke-linecap="round" opacity="0.55"/>
+    <rect x="21.5" y="12.5" width="7" height="7" rx="1.5" fill="#ffffff"/>
+</svg>

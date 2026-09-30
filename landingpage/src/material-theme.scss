@@ -1,0 +1,42 @@
+// Angular Material theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      // No external font, so Material must not ask for Roboto
+      typography: (
+          plain-family: (
+            'Segoe UI Variable Text',
+            'Segoe UI',
+            system-ui,
+            -apple-system,
+            'Helvetica Neue',
+            Arial,
+            sans-serif,
+          ),
+          brand-family: (
+            'Segoe UI Variable Text',
+            'Segoe UI',
+            system-ui,
+            -apple-system,
+            sans-serif,
+          ),
+        ),
+      density: 0,
+    )
+  );
+}
+
+// Material reads `color-scheme` to pick its light or dark token set
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}

@@ -1,0 +1,22 @@
+<figure class="figure">
+  <button class="figure__frame" type="button" [style.aspect-ratio]="ratio()" (click)="expand()">
+    <img
+      class="figure__image"
+      [src]="src()"
+      [srcset]="srcset()"
+      sizes="(min-width: 62rem) 46rem, 92vw"
+      [width]="width()"
+      [height]="height()"
+      [alt]="alt()"
+      loading="lazy"
+      decoding="async"
+    />
+
+    <span class="figure__expand" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path [attr.d]="glyphs.expand" /></svg>
+    </span>
+    <span class="visually-hidden" i18n="@@media.expand.cta">View larger</span>
+  </button>
+
+  <figcaption class="figure__caption">{{ caption() }}</figcaption>
+</figure>

@@ -1,0 +1,51 @@
+<figure class="media" [lpgTilt]="tilt()" [style.view-transition-name]="transitionName()">
+  <figcaption class="media__chrome">
+    <span class="media__dots" aria-hidden="true"></span>
+    <span class="media__path">{{ label() }}</span>
+
+    <button
+      class="media__expand"
+      type="button"
+      i18n-aria-label="@@media.expand.cta"
+      aria-label="View larger"
+      (click)="expand()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path [attr.d]="glyphs.expand" />
+      </svg>
+    </button>
+
+    @if (clip() !== null) {
+      <lpg-play-toggle [playing]="playback.playing()" (toggled)="togglePlayback()" />
+    }
+  </figcaption>
+
+  <div class="media__frame" #frame [style.--drift.px]="drift()">
+    <img
+      class="media__image"
+      [ngSrc]="poster()"
+      fill
+      ngSrcset="640w, 1280w"
+      sizes="(min-width: 62rem) 46rem, 92vw"
+      [alt]="alt()"
+    />
+
+    @if (clip(); as clipSource) {
+      <video
+        #video
+        class="media__video"
+        [class.is-showing]="playback.visible()"
+        [src]="clipSource"
+        width="1280"
+        height="800"
+        muted
+        loop
+        playsinline
+        preload="none"
+        aria-hidden="true"
+        (playing)="playback.onPlaying()"
+        (pause)="playback.onPaused()"
+      ></video>
+    }
+  </div>
+</figure>

@@ -1,0 +1,44 @@
+<lpg-modal-shell
+  [heading]="heading"
+  headingId="error-modal-title"
+  [closeLabel]="closeLabel"
+  (closed)="dismiss()"
+>
+  <div class="error-modal">
+    <div class="error-modal__body">
+      @if (report.detailed) {
+        <p class="error-modal__message">{{ report.message }}</p>
+
+        @if (report.stack) {
+          <details class="error-modal__details">
+            <summary class="error-modal__summary">Stack trace</summary>
+            <pre class="error-modal__stack">{{ report.stack }}</pre>
+          </details>
+        }
+      } @else {
+        <p class="error-modal__text" i18n="@@error.text">Try reloading?</p>
+      }
+    </div>
+
+    @if (!report.detailed) {
+      <div class="error-modal__footer">
+        <button
+          type="button"
+          class="button button--ghost error-modal__action"
+          (click)="dismiss()"
+          i18n="@@error.dismiss.cta"
+        >
+          No
+        </button>
+        <button
+          type="button"
+          class="button button--primary error-modal__action"
+          (click)="reload()"
+          i18n="@@error.reload.cta"
+        >
+          Yes
+        </button>
+      </div>
+    }
+  </div>
+</lpg-modal-shell>

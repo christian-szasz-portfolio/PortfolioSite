@@ -1,0 +1,33 @@
+<div class="zoom" role="group" i18n-aria-label="@@zoom.group.label" aria-label="Zoom">
+  <button
+    class="zoom__button"
+    type="button"
+    i18n-aria-label="@@zoom.out.cta"
+    aria-label="Zoom out"
+    (click)="zoomOut.emit()"
+  >
+    <svg class="zoom__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path [attr.d]="glyphs.zoomOut" />
+    </svg>
+  </button>
+  <output class="zoom__level">{{ percentage() }}</output>
+  <button
+    class="zoom__button"
+    type="button"
+    i18n-aria-label="@@zoom.in.cta"
+    aria-label="Zoom in"
+    (click)="zoomIn.emit()"
+  >
+    <svg class="zoom__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path [attr.d]="glyphs.zoomIn" />
+    </svg>
+  </button>
+  <button
+    class="zoom__button zoom__button--wide"
+    type="button"
+    (click)="fit.emit()"
+    i18n="@@zoom.fit.cta"
+  >
+    Fit
+  </button>
+</div>

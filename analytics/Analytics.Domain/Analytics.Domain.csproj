@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- No PackageReference by design: the domain must compile without Azure, MaxMind or a host. -->
+  <PropertyGroup>
+    <RootNamespace>Analytics.Domain</RootNamespace>
+    <AssemblyName>Analytics.Domain</AssemblyName>
+  </PropertyGroup>
+
+</Project>

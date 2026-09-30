@@ -1,0 +1,327 @@
+// The formula backdrop is clipped to the section and sits behind the content.
+.section {
+  &--profile {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  &--profile &__inner {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.profile {
+  display: flow-root;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  // Photo + thought bubble. Stacked on mobile, side by side from tablet up.
+  &__stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+    margin: var(--space-5) 0 var(--space-6);
+  }
+
+  &__portrait {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: min(72vw, 300px);
+    aspect-ratio: 1;
+
+    // A soft halo behind everything, for depth. Static, no motion.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      background: radial-gradient(
+        closest-side,
+        color-mix(in srgb, var(--accent) 22%, transparent),
+        transparent 72%
+      );
+    }
+  }
+
+  &__photo {
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 1;
+    background-color: var(--surface-2);
+    box-shadow: 0 14px 34px rgb(0 0 0 / 24%);
+  }
+
+  // A conic gradient masked to a thin band, so the middle stays clear for the photo
+  &__ring {
+    position: absolute;
+    border-radius: 50%;
+    animation: profile-spin 9s linear infinite;
+  }
+
+  &__ring--inner {
+    inset: 0;
+    background: conic-gradient(
+      from 0deg,
+      var(--accent),
+      color-mix(in srgb, var(--accent-strong) 92%, transparent) 90deg,
+      transparent 165deg,
+      var(--accent) 275deg,
+      var(--accent-strong) 360deg
+    );
+    mask: radial-gradient(farthest-side, #0000 calc(100% - 12px), #000 calc(100% - 11px));
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 12px), #000 calc(100% - 11px));
+  }
+
+  &__ring--outer {
+    inset: -10px;
+    opacity: 0.75;
+    background: conic-gradient(
+      from 180deg,
+      transparent 0deg,
+      color-mix(in srgb, var(--accent) 55%, transparent) 130deg,
+      transparent 250deg,
+      color-mix(in srgb, var(--accent-strong) 55%, transparent) 360deg
+    );
+    mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 calc(100% - 2px));
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 calc(100% - 2px));
+    animation-duration: 17s;
+    animation-direction: reverse;
+  }
+
+  &__text {
+    margin-top: var(--space-4);
+    color: var(--ink-muted);
+  }
+
+  &__hobbies-label {
+    margin-top: var(--space-6);
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__hobbies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+}
+
+// Serif-italic quotation; below 1024px a plain card, the cloud being desktop-only
+.testimonial {
+  position: relative;
+  max-width: 40rem;
+  margin: 0;
+  padding: var(--space-5);
+  border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--line-strong));
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 16%, transparent);
+
+  // The cloud outline reaches past the box so the lobes clear the words
+  &__cloud {
+    display: none;
+    position: absolute;
+    // Sized explicitly: an over-constrained viewBox resolves off-centre
+    top: -34px;
+    left: -84px;
+    width: calc(100% + 168px);
+    height: calc(100% + 68px);
+    // Escape the global `svg { max-width: 100% }` reset, which would cap the width.
+    max-width: none;
+    z-index: 0;
+    overflow: visible;
+    pointer-events: none;
+    fill: color-mix(in srgb, var(--surface-2) 78%, transparent);
+    stroke: color-mix(in srgb, var(--accent) 75%, var(--line-strong));
+    stroke-width: 2;
+    // The border glows.
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 40%, transparent))
+      drop-shadow(0 0 22px color-mix(in srgb, var(--accent) 18%, transparent));
+
+    path {
+      // Keep the stroke crisp despite the non-uniform stretch.
+      vector-effect: non-scaling-stroke;
+    }
+  }
+
+  // The two trailing dots of the tail, shrinking toward the photo (desktop only). They glow too.
+  &::before,
+  &::after {
+    content: '';
+    display: none;
+    position: absolute;
+    border: 2px solid color-mix(in srgb, var(--accent) 60%, var(--line-strong));
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--surface-2) 78%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 32%, transparent);
+  }
+
+  &::before {
+    width: 1.35rem;
+    height: 1.35rem;
+    left: 1.5rem;
+    bottom: -1.1rem;
+  }
+
+  &::after {
+    width: 0.8rem;
+    height: 0.8rem;
+    left: 0.2rem;
+    bottom: -2.3rem;
+  }
+
+  // The third, smallest tail dot, nearest the photo (desktop only).
+  &__dot {
+    display: none;
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 2px solid color-mix(in srgb, var(--accent) 60%, var(--line-strong));
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--surface-2) 78%, transparent);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
+    left: -1rem;
+    bottom: -3.4rem;
+  }
+
+  &__quote {
+    position: relative;
+    z-index: 1;
+    margin: 24px;
+    padding: 2px;
+    // Centred, not offset, so the text stays concentric as the cloud resizes
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: smaller;
+    line-height: 1.55;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+
+    &::before {
+      content: '\201C';
+      color: var(--accent);
+    }
+
+    &::after {
+      content: '\201D';
+      margin-left: 0.1ch;
+      color: var(--accent);
+    }
+  }
+}
+
+// After the base rules on purpose: media queries add no specificity
+@media (width >= 64rem) {
+  .profile {
+    &__stage {
+      flex-direction: row;
+      align-items: flex-start;
+      // Wide gap so the (wide) cloud's left lobe stays clear of the photo.
+      gap: 8rem;
+    }
+
+    &__portrait {
+      width: clamp(320px, 38vw, 440px);
+    }
+  }
+
+  .testimonial {
+    flex: 1 1 auto;
+    // Centre on the photo, then nudge up so the cloud sits just above its middle.
+    align-self: center;
+    max-width: 60ch;
+    margin: 0 0 122px;
+    padding: var(--space-6) var(--space-7);
+    transform: translate(-40px, -28px);
+    // Drop the card chrome: the cloud provides the shape here.
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .testimonial__cloud {
+    display: block;
+  }
+
+  // Tail dots sit on the bubble's lower-left, stepping down toward the photo.
+  .testimonial::before,
+  .testimonial::after,
+  .testimonial__dot {
+    display: block;
+  }
+
+  .testimonial::before {
+    left: -1.5rem;
+    bottom: 1.75rem;
+  }
+
+  .testimonial::after {
+    left: -3.1rem;
+    bottom: 0.5rem;
+  }
+
+  .testimonial__dot {
+    left: -4.7rem;
+    bottom: -0.75rem;
+  }
+}
+
+.hobby {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--ink-muted);
+  font-size: var(--step--1);
+  transition:
+    border-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
+
+  &__icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--accent);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+}
+
+@keyframes profile-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+// Motion off, not down: the rings hold still but stay as gradient rings.
+@media (prefers-reduced-motion: reduce) {
+  .profile__ring {
+    animation: none;
+  }
+}

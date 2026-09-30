@@ -1,0 +1,129 @@
+.modal {
+  width: min(96vw, 60rem);
+  height: min(92vh, 58rem);
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-1);
+  color: var(--ink);
+  box-shadow: 0 40px 120px rgb(0 0 0 / 55%);
+
+  &::backdrop {
+    background-color: rgb(4 8 13 / 72%);
+    backdrop-filter: blur(6px);
+  }
+
+  &[open] {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    animation: modal-in 260ms var(--ease);
+
+    &::backdrop {
+      animation: backdrop-in 260ms var(--ease);
+    }
+  }
+
+  &.is-closing {
+    animation: modal-out 180ms var(--ease) forwards;
+  }
+
+  &__chrome {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--line);
+    background-color: var(--surface-2);
+  }
+
+  &__title {
+    font-size: var(--step-1);
+  }
+
+  &__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  &__close {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--ink-muted);
+    transition:
+      border-color 200ms var(--ease),
+      color 200ms var(--ease);
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--ink);
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      fill: none;
+      stroke: currentcolor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+    }
+  }
+
+  &__hint {
+    padding: var(--space-3) var(--space-5);
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+    text-align: center;
+
+    // Empty when a pop-up offers no hint, and then it should take no room.
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal {
+    &,
+    &--dialog,
+    &.is-closing {
+      animation: none !important;
+    }
+  }
+}
+
+@media (width < 48rem) {
+  .modal {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    border: 0;
+
+    &__chrome {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    &__title {
+      font-size: var(--step-0);
+    }
+  }
+}
+
+// Inside a Material panel the panel sets the size; this rule outranks the global one, so it lives here.
+.modal--dialog {
+  width: 100%;
+  height: 100%;
+}

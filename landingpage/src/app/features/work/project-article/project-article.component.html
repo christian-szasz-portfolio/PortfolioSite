@@ -1,0 +1,26 @@
+@let item = article();
+
+<article class="article" [id]="item.id" [lpgSectionSpy]="item.id" lpgReveal>
+  <h2 class="article__heading">
+    <a
+      class="article__anchor"
+      [routerLink]="[]"
+      [fragment]="item.id"
+      i18n-aria-label="@@article.anchor"
+      aria-label="Link to this section"
+    >
+      <svg class="article__anchor-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path [attr.d]="glyphs.linkUpper" />
+        <path [attr.d]="glyphs.linkLower" />
+      </svg> </a
+    >{{ item.heading }}
+  </h2>
+
+  @if (item.lede; as lede) {
+    <p class="article__lede">{{ lede }}</p>
+  }
+
+  @for (block of item.blocks; track $index) {
+    <lpg-article-block [block]="block" />
+  }
+</article>

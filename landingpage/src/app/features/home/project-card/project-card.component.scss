@@ -1,0 +1,95 @@
+// One project, as a case study
+
+.project {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-6);
+
+  // Grid items must be allowed to shrink below their content
+  &__media,
+  &__body {
+    min-width: 0;
+  }
+
+  // Spends DriftDirective's offset, so the words separate from the picture
+  &__body {
+    transform: translateY(var(--drift, 0px));
+  }
+
+  &__index {
+    margin-bottom: var(--space-2);
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+  }
+
+  &__title {
+    font-size: var(--step-2);
+  }
+
+  &__tagline {
+    margin-top: var(--space-3);
+    color: var(--ink);
+    font-size: var(--step-1);
+    font-weight: 550;
+  }
+
+  &__summary {
+    margin-top: var(--space-4);
+    color: var(--ink-muted);
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  @media (width >= 62rem) {
+    gap: var(--space-8);
+    // Stretch, so the sticky media card has room to travel
+    align-items: stretch;
+    padding-block: var(--space-9);
+
+    // The screenshot is the argument, so it always takes the larger share
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+
+    &--reverse {
+      grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+
+      .project__media {
+        order: 2;
+      }
+    }
+  }
+}
+
+.project {
+  // One column with a bounded picture, so every slide occupies the same box
+  &--slide {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-block: 0;
+
+    .project__media {
+      order: 0;
+    }
+
+    @media (width >= 62rem) {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      align-items: center;
+      gap: var(--space-7);
+
+      &.project--reverse {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+
+        .project__media {
+          order: 0;
+        }
+      }
+    }
+  }
+}

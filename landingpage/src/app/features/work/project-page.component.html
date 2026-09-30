@@ -1,0 +1,21 @@
+@if (resolved(); as found) {
+  <div class="section__inner">
+    <lpg-project-hero [project]="found.project" [trail]="found.trail" [words]="found.words" />
+
+    <div class="project-page">
+      <aside class="project-page__contents">
+        <lpg-table-of-contents [entries]="found.contents" />
+      </aside>
+
+      <div class="project-page__articles">
+        @for (article of found.page.articles; track article.id) {
+          <lpg-project-article [article]="article" />
+        }
+
+        <lpg-project-pager [previous]="found.previous" [next]="found.next" />
+      </div>
+    </div>
+  </div>
+} @else {
+  <lpg-not-found-content />
+}

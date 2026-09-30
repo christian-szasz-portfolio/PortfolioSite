@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Analytics.Api</RootNamespace>
+    <!-- Globalization stays on: the log digest is scheduled in a named time zone, and resolving
+         one needs ICU. With it off, Europe/Bucharest is not found and the host stops at startup. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- Where a local secret lives in Development: `dotnet user-secrets`, outside the repository. -->
+    <UserSecretsId>f6aec531-99b5-4cdf-99e6-c5766f397c38</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Analytics.Domain\Analytics.Domain.csproj" />
+    <ProjectReference Include="..\Analytics.Infrastructure\Analytics.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\**\*.mmdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- Local-only settings. Kept out of publish so a deployment cannot pick up the
+         emulator connection string by accident; the real one comes from the environment. -->
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Common.Security" Version="0.1.1" />
+    <PackageReference Include="Common.Web" Version="0.1.0" />
+    <PackageReference Include="FastEndpoints" Version="8.3.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,40 @@
+.article {
+  padding-block: var(--space-7);
+  border-top: 1px solid var(--line);
+
+  &__heading {
+    font-size: var(--step-2);
+  }
+
+  // A permalink to this section, sitting in front of its heading
+  &__anchor {
+    display: inline-flex;
+    align-items: center;
+    margin-inline-end: var(--space-2);
+    color: var(--ink-faint);
+    vertical-align: baseline;
+    transition: color var(--duration) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--accent);
+    }
+  }
+
+  &__anchor-icon {
+    width: 0.62em;
+    height: 0.62em;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &__lede {
+    max-width: var(--measure);
+    margin-top: var(--space-4);
+    color: var(--ink);
+    font-size: var(--step-1);
+  }
+}

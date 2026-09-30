@@ -1,0 +1,5 @@
+// Measure and ink only: projected content owns its own typography
+.prose {
+  max-width: var(--measure);
+  color: var(--ink-muted);
+}

@@ -1,0 +1,49 @@
+<div class="lang" lpgMenu #menu="lpgMenu">
+  <button
+    class="lang__trigger"
+    lpgMenuTrigger
+    i18n-aria-label="@@lang.label"
+    aria-label="Change language"
+  >
+    <common-flag [code]="current.code" />
+    <span class="lang__code">{{ current.short }}</span>
+    <span class="lang__caret" aria-hidden="true"></span>
+  </button>
+
+  @if (menu.open()) {
+    <ul class="lang__menu" role="menu" i18n-aria-label="@@lang.menu.label" aria-label="Languages">
+      @for (locale of locales; track locale.code) {
+        <li>
+          <a
+            class="lang__item"
+            lpgMenuItem
+            [href]="href(locale)"
+            [attr.hreflang]="locale.code"
+            [attr.lang]="locale.code"
+            [attr.aria-current]="locale.code === current.code ? 'true' : null"
+          >
+            <common-flag [code]="locale.code" />
+            <span class="lang__item-code">{{ locale.short }}</span>
+            <span class="lang__item-name">{{ locale.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+
+  <!-- Shown only with scripting off, where the menu above can never open -->
+  <ul class="lang__plain" i18n-aria-label="@@lang.menu.label" aria-label="Languages">
+    @for (locale of locales; track locale.code) {
+      <li>
+        <a
+          class="lang__plain-item"
+          [href]="href(locale)"
+          [attr.hreflang]="locale.code"
+          [attr.lang]="locale.code"
+          [attr.aria-current]="locale.code === current.code ? 'true' : null"
+          >{{ locale.short }}</a
+        >
+      </li>
+    }
+  </ul>
+</div>

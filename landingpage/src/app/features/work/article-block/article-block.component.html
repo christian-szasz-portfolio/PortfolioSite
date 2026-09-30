@@ -1,0 +1,50 @@
+@let item = block();
+
+@switch (item.kind) {
+  @case (kinds.Prose) {
+    <lpg-prose>
+      <p class="article-block__text">{{ item.text }}</p>
+    </lpg-prose>
+  }
+
+  @case (kinds.List) {
+    <lpg-prose>
+      @if (item.ordered) {
+        <ol class="article-block__list article-block__list--ordered">
+          @for (entry of item.items; track entry) {
+            <li class="article-block__item">{{ entry }}</li>
+          }
+        </ol>
+      } @else {
+        <ul class="article-block__list">
+          @for (entry of item.items; track entry) {
+            <li class="article-block__item">{{ entry }}</li>
+          }
+        </ul>
+      }
+    </lpg-prose>
+  }
+
+  @case (kinds.Code) {
+    <lpg-code-block [source]="item.source" [language]="item.language" [caption]="item.caption" />
+  }
+
+  @case (kinds.Figure) {
+    <lpg-figure-block
+      [src]="item.src"
+      [srcSmall]="item.srcSmall"
+      [alt]="item.alt"
+      [caption]="item.caption"
+      [width]="item.width"
+      [height]="item.height"
+    />
+  }
+
+  @case (kinds.Callout) {
+    <lpg-callout [text]="item.text" [label]="item.label" [tone]="item.tone ?? tones.Note" />
+  }
+
+  @case (kinds.Specs) {
+    <lpg-spec-table [rows]="item.rows" />
+  }
+}

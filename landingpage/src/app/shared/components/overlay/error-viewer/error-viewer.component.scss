@@ -1,0 +1,77 @@
+.error-modal {
+  // min-height: 0 lets this grid child scroll instead of stretching the modal
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  max-inline-size: 60ch;
+
+  &__body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-5);
+    padding: var(--space-6) var(--space-7);
+    text-align: center;
+  }
+
+  &__message {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--warning-ink);
+    overflow-wrap: anywhere;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: var(--step-0);
+  }
+
+  &__details {
+    max-inline-size: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-2);
+  }
+
+  &__summary {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+
+    &::marker {
+      color: var(--ink-faint);
+    }
+  }
+
+  &__stack {
+    margin: 0;
+    // The trace is read line by line, so it scrolls rather than wraps, and each line starts left
+    overflow: auto;
+    max-block-size: 40vh;
+    padding: var(--space-4);
+    border-block-start: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    line-height: 1.6;
+    text-align: start;
+    color: var(--ink-muted);
+  }
+
+  // The answer sits apart from the question, under a rule, like a card's footer
+  &__footer {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-7);
+    border-block-start: 1px solid var(--line);
+    background-color: var(--surface-2);
+  }
+
+  &__action {
+    min-inline-size: 8rem;
+    padding-block: 0.45rem;
+  }
+}

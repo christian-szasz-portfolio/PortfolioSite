@@ -1,0 +1,48 @@
+.article-block {
+  &__text {
+    margin-top: var(--space-4);
+  }
+
+  &__list {
+    margin-top: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+    counter-reset: article-item;
+  }
+
+  &__item {
+    position: relative;
+    padding-inline-start: var(--space-5);
+  }
+
+  &__item::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.65em;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: var(--accent);
+  }
+
+  &__list--ordered &__item {
+    counter-increment: article-item;
+    padding-inline-start: var(--space-6);
+  }
+
+  &__list--ordered &__item::before {
+    content: counter(article-item) '.';
+    top: 0;
+    width: auto;
+    height: auto;
+    // One text line high, so the number reads as a marker rather than a superscript
+    line-height: calc(1.65 * var(--step-0));
+    border-radius: 0;
+    background: none;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+}

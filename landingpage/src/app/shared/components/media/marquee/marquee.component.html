@@ -1,0 +1,17 @@
+<div
+  class="marquee"
+  [class.marquee--reverse]="reverse()"
+  [class.is-running]="running()"
+  [style.--marquee-duration]="duration()"
+>
+  @for (copy of copies; track copy) {
+    <ul class="marquee__track" [attr.aria-hidden]="$first ? null : 'true'">
+      @for (item of items(); track item) {
+        <li class="marquee__item">
+          <lpg-tech-icon [name]="item" />
+          <span class="marquee__label">{{ item }}</span>
+        </li>
+      }
+    </ul>
+  }
+</div>

@@ -1,0 +1,13 @@
+<dl class="stats">
+  @for (stat of stats(); track stat.label) {
+    <div class="stat">
+      <dt class="stat__label">{{ stat.label }}</dt>
+      <dd class="stat__value">
+        <span [lpgCounter]="stat.value" [plain]="stat.plain ?? false"></span>
+        @if (stat.suffix) {
+          <span class="stat__suffix">{{ stat.suffix }}</span>
+        }
+      </dd>
+    </div>
+  }
+</dl>

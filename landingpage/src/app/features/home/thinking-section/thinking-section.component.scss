@@ -1,0 +1,13 @@
+.section {
+  // The band that sets this section apart from the ones either side of it
+  &--thinking {
+    border-block: 1px solid var(--line);
+    background-color: var(--surface-1);
+  }
+}
+
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--space-5);
+}

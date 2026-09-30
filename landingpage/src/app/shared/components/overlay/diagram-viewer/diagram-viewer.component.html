@@ -1,0 +1,34 @@
+<lpg-modal-shell
+  [heading]="data.caption"
+  headingId="diagram-modal-title"
+  [closeLabel]="closeLabel"
+  (closed)="close()"
+>
+  <lpg-zoom-controls
+    modal-tools
+    [level]="zoom()"
+    (zoomOut)="nudge(-1)"
+    (zoomIn)="nudge(1)"
+    (fit)="fit()"
+  />
+
+  <div
+    class="diagram"
+    #viewport
+    tabindex="0"
+    [class.is-dragging]="dragging()"
+    (wheel)="zoomInput.onWheel($event)"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerEnd()"
+    (pointercancel)="onPointerEnd()"
+  >
+    <div class="diagram__stage" #stage [style.width]="stageWidth()" [style.height]="stageHeight()">
+      <img class="diagram__image" [src]="data.src" [alt]="data.alt" draggable="false" />
+    </div>
+  </div>
+
+  <ng-container modal-hint i18n="@@diagram.hint.text">
+    Drag or scroll to pan &middot; Ctrl and scroll to zoom &middot; 0 to fit &middot; Esc to close
+  </ng-container>
+</lpg-modal-shell>

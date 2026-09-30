@@ -1,0 +1,321 @@
+.hero {
+  position: relative;
+  // The work section brings its own top padding, so this side stays short
+  padding-block: clamp(3rem, 6vw, 6rem) var(--space-7);
+  overflow: hidden;
+
+  // Accent light and a fine grid, both drawn in CSS
+  &__backdrop {
+    position: absolute;
+    inset: -20% -10% auto;
+    height: 46rem;
+    pointer-events: none;
+    background-image:
+      radial-gradient(42rem 30rem at 18% 12%, var(--glow), transparent 68%),
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      64px 64px,
+      64px 64px;
+    mask-image: radial-gradient(60% 60% at 50% 30%, #000 30%, transparent 100%);
+  }
+
+  &__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      26rem 26rem at var(--mx, 26%) var(--my, 30%),
+      var(--glow),
+      transparent 70%
+    );
+  }
+
+  &__orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    will-change: transform;
+
+    &--a {
+      top: 6%;
+      right: 4%;
+      width: 22rem;
+      height: 22rem;
+      background: radial-gradient(circle, rgb(10 102 194 / 42%), transparent 68%);
+    }
+
+    &--b {
+      top: 44%;
+      right: 24%;
+      width: 15rem;
+      height: 15rem;
+      background: radial-gradient(circle, rgb(53 196 122 / 22%), transparent 68%);
+    }
+
+    :host-context([data-theme='light']) & {
+      opacity: 0.32;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      display: none;
+    }
+  }
+
+  &__inner {
+    position: relative;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  // The location and the view count are two boxes side by side, not one inside the other.
+  &__badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  &__eyebrow {
+    display: inline-flex;
+    margin: 0;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background-color: var(--surface-1);
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    cursor: default;
+    transition:
+      border-color 320ms var(--ease),
+      background-color 320ms var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      border-color: rgb(53 196 122 / 55%);
+      background-color: color-mix(in srgb, #35c47a 8%, var(--surface-1));
+    }
+
+    // Opts back into hiding the native pointer, which this pill's own cursor would show
+    :host-context(.has-cursor) & {
+      cursor: none;
+    }
+  }
+
+  // Two labels share one cell, so the roll between them costs no layout
+  &__status {
+    display: grid;
+    place-items: center;
+  }
+
+  &__status-face {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    transition:
+      opacity 340ms var(--ease),
+      transform 340ms var(--ease);
+
+    &--here {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &--remote {
+      opacity: 0;
+      transform: translateY(0.55em);
+    }
+  }
+
+  &__eyebrow:hover,
+  &__eyebrow:focus-visible {
+    .hero__status-face--here {
+      opacity: 0;
+      transform: translateY(-0.55em);
+    }
+
+    .hero__status-face--remote {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__pin {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: #35c47a;
+    box-shadow: 0 0 0 3px rgb(53 196 122 / 18%);
+  }
+
+  &__wifi {
+    width: 0.85rem;
+    height: 0.85rem;
+    overflow: visible;
+    fill: none;
+    stroke: #35c47a;
+    stroke-width: 2;
+    stroke-linecap: round;
+
+    &-dot {
+      fill: #35c47a;
+      stroke: none;
+    }
+  }
+
+  // The arcs broadcast outward once the pill is hovered
+  &__eyebrow:hover #{&}__wifi-arc,
+  &__eyebrow:focus-visible #{&}__wifi-arc {
+    transform-origin: 12px 18px;
+    animation: hero-wifi 1.6s var(--ease) infinite;
+
+    &--far {
+      animation-delay: 240ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__status-face {
+      transition: none;
+    }
+
+    &__eyebrow:hover #{&}__wifi-arc,
+    &__eyebrow:focus-visible #{&}__wifi-arc {
+      animation: none;
+    }
+  }
+
+  // Wide enough that the two authored lines hold at desktop
+  &__title {
+    max-width: 30ch;
+    // Display rhythm, stated here rather than inherited from the tag: the level says where
+    // this sits in the outline, the class says how big it is.
+    line-height: 1.05;
+    font-size: var(--step-4);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+
+  &__lede {
+    max-width: 58ch;
+    margin-top: var(--space-5);
+    color: var(--ink-muted);
+    font-size: var(--step-1);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+  }
+}
+
+[data-hero-step] {
+  &[data-hero-step='0'] {
+    --step-delay: 0ms;
+  }
+  &[data-hero-step='1'] {
+    --step-delay: 90ms;
+  }
+  &[data-hero-step='2'] {
+    --step-delay: 340ms;
+  }
+  &[data-hero-step='3'] {
+    --step-delay: 440ms;
+  }
+  &[data-hero-step='4'] {
+    --step-delay: 540ms;
+  }
+}
+
+:host-context(.is-intro-ready) {
+  [data-hero-step] {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+
+  .hero.is-ready [data-hero-step] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 800ms var(--ease) calc(var(--step-delay, 0ms) + 60ms),
+      transform 800ms var(--ease) calc(var(--step-delay, 0ms) + 60ms);
+  }
+
+  // The words carry the entrance, so the headline has no step transition
+  .hero__title[data-hero-step] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+
+    ::ng-deep .split__inner {
+      transform: translateY(105%);
+    }
+  }
+
+  .hero.is-ready .hero__title ::ng-deep .split__inner {
+    transform: none;
+    transition: transform 900ms cubic-bezier(0.19, 1, 0.22, 1) calc(var(--delay, 0ms) + 120ms);
+  }
+}
+
+// Driven by a view timeline, so departure costs nothing per frame
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero {
+      &__inner {
+        animation: hero-depart linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 85%;
+      }
+
+      &__backdrop {
+        animation: hero-sink linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 100%;
+      }
+    }
+  }
+}
+
+@keyframes hero-depart {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0.15;
+    transform: translateY(-4rem) scale(0.97);
+  }
+}
+
+@keyframes hero-sink {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0.4;
+    transform: translateY(3rem);
+  }
+}
+
+// A broadcast shimmer across the wifi arcs while the pill is hovered
+@keyframes hero-wifi {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

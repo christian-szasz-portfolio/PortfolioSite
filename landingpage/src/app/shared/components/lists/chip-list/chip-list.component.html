@@ -1,0 +1,8 @@
+<ul class="chips" [attr.aria-label]="label()">
+  @for (item of items(); track item) {
+    <li class="chip">
+      <lpg-tech-icon [name]="item" />
+      <span class="chip__name">{{ item }}</span>
+    </li>
+  }
+</ul>

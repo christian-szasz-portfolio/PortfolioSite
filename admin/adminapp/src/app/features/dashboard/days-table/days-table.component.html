@@ -1,0 +1,22 @@
+<adm-panel heading="Days">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Day</th>
+        <th scope="col" class="table__number">Views</th>
+        <th scope="col" class="table__number">Interactions</th>
+        <th scope="col" class="table__number">Refused</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (day of newestFirst(); track day.day) {
+        <tr>
+          <td>{{ day.day }}</td>
+          <td class="table__number">{{ day.views }}</td>
+          <td class="table__number">{{ day.interactions }}</td>
+          <td class="table__number" [class.table__warn]="day.rejected > 0">{{ day.rejected }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</adm-panel>

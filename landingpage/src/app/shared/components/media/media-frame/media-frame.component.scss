@@ -1,0 +1,176 @@
+// The screenshot in its window chrome.
+
+.media {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-media);
+
+  // The three custom properties are written by lpgTilt
+  transform: perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+    translateY(var(--tilt-lift, 0px));
+  transform-style: preserve-3d;
+  transition: box-shadow 400ms var(--ease);
+
+  // A sheen that follows the pointer across the glass.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      30rem 30rem at var(--glare-x, 50%) var(--glare-y, 50%),
+      rgb(255 255 255 / 9%),
+      transparent 60%
+    );
+    transition: opacity 400ms var(--ease);
+  }
+
+  &.is-tilting {
+    box-shadow:
+      0 4px 10px rgb(0 0 0 / 30%),
+      0 40px 80px rgb(0 0 0 / 45%);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &__chrome {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--line);
+    background-color: var(--surface-2);
+  }
+
+  // Three dots as one background, so the box measures what it paints
+  &__dots {
+    flex: none;
+    width: 2.25rem;
+    height: 0.55rem;
+    background-image:
+      radial-gradient(
+        circle at 0.275rem 50%,
+        #ff5f57 0 0.275rem,
+        transparent calc(0.275rem + 0.5px)
+      ),
+      radial-gradient(
+        circle at 1.125rem 50%,
+        #febc2e 0 0.275rem,
+        transparent calc(0.275rem + 0.5px)
+      ),
+      radial-gradient(
+        circle at 1.975rem 50%,
+        #28c840 0 0.275rem,
+        transparent calc(0.275rem + 0.5px)
+      );
+  }
+
+  &__path {
+    // Lets the label ellipsis instead of setting the column floor
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Anchors the control group: always present, unlike the play toggle
+  &__expand {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline-start: auto;
+    // A 14px mark and 0.3rem of padding left the target a hair under the 24px floor
+    min-inline-size: 1.75rem;
+    min-block-size: 1.75rem;
+    padding: 0.3rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--ink-muted);
+    transition:
+      color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--ink);
+    }
+
+    svg {
+      width: 0.85rem;
+      height: 0.85rem;
+      fill: none;
+      stroke: currentcolor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  &__frame {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: var(--surface-0);
+  }
+
+  // Scaled past the frame so the scroll drift never exposes an edge
+  &__image,
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transform: translate3d(0, var(--drift, 0px), 0) scale(1.06);
+    transition: transform 600ms var(--ease);
+  }
+
+  // Revealed only once the clip runs, so a slow fetch shows the poster
+  &__video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition:
+      opacity 400ms var(--ease),
+      transform 600ms var(--ease);
+
+    &.is-showing {
+      opacity: 1;
+    }
+  }
+
+  &:hover &__image,
+  &:hover &__video {
+    transform: translate3d(0, var(--drift, 0px), 0) scale(1.1);
+  }
+
+  @media (width >= 62rem) {
+    position: sticky;
+    top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none !important;
+
+    &::after {
+      display: none;
+    }
+
+    &__image,
+    &__video {
+      transform: none !important;
+    }
+  }
+}

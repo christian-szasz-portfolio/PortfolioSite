@@ -1,0 +1,42 @@
+@if (visible()) {
+  <aside
+    class="consent"
+    role="region"
+    i18n-aria-label="@@consent.label"
+    aria-label="Usage statistics consent"
+  >
+    <p class="consent__text">
+      <span i18n="@@consent.text"
+        >With your consent, this site keeps anonymous statistics: the pages viewed and the
+        approximate country. No personal data is stored.</span
+      >
+      <button
+        type="button"
+        class="link consent__more"
+        (click)="openDetails()"
+        i18n="@@consent.more.cta"
+      >
+        Details
+      </button>
+    </p>
+
+    <div class="consent__actions">
+      <button
+        type="button"
+        class="button button--ghost"
+        (click)="decline()"
+        i18n="@@consent.decline.cta"
+      >
+        Decline
+      </button>
+      <button
+        type="button"
+        class="button button--primary"
+        (click)="accept()"
+        i18n="@@consent.accept.cta"
+      >
+        Accept
+      </button>
+    </div>
+  </aside>
+}

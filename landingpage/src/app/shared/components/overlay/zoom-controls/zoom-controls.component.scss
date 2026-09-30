@@ -1,0 +1,4 @@
+// The group itself is the global .zoom block; the host only gets out of the toolbar's way
+:host {
+  display: contents;
+}

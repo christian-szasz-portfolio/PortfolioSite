@@ -1,0 +1,9 @@
+<header class="panel__head">
+  <h2 class="panel__title">{{ heading() }}</h2>
+
+  @if (note(); as line) {
+    <p class="panel__note">{{ line }}</p>
+  }
+</header>
+
+<ng-content />

@@ -1,0 +1,60 @@
+// Projected into the shell, so it is styled here rather than there.
+.sitemap {
+  // `safe` keeps the overflow scrollable; plain centring hides the start edge
+  display: grid;
+  place-content: safe center;
+  overflow: auto;
+  padding: var(--space-5);
+  background-color: var(--surface-0);
+  overscroll-behavior: contain;
+
+  // Carries the scaled size, so the scroll container knows how far to go
+  &__stage {
+    position: relative;
+  }
+
+  &__canvas {
+    position: relative;
+    transform-origin: top left;
+  }
+
+  &__wires {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__wire {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+  }
+
+  &__node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-1);
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition:
+      border-color var(--duration) var(--ease),
+      color var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--accent);
+      background-color: var(--surface-2);
+      color: var(--ink);
+    }
+
+    &--root {
+      color: var(--ink);
+      font-weight: 600;
+    }
+  }
+}

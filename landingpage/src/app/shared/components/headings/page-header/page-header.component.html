@@ -1,0 +1,17 @@
+<header class="page-header" [class.page-header--centred]="centred()" [lpgReveal]="reveals.Mask">
+  @if (eyebrow(); as text) {
+    <p class="page-header__eyebrow">{{ text }}</p>
+  }
+
+  <h1 class="page-header__title" [lpgSplitText]="heading()">{{ heading() }}</h1>
+
+  @if (meta(); as text) {
+    <p class="page-header__meta">{{ text }}</p>
+  }
+
+  @if (lede(); as text) {
+    <p class="page-header__lede">{{ text }}</p>
+  }
+
+  <ng-content />
+</header>

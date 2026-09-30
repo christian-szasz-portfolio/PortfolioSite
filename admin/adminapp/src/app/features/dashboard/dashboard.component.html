@@ -1,0 +1,33 @@
+@let data = overview();
+
+<section class="cards">
+  <adm-stat-card
+    [value]="data.archivedInteractions"
+    label="Interactions archived"
+    [accent]="interactionsAccent"
+  />
+  <adm-stat-card [value]="data.archivedViews" label="Views archived" [accent]="viewsAccent" />
+  <adm-stat-card [value]="data.days.length" label="Days held" [accent]="daysAccent" />
+  <adm-stat-card [value]="data.views?.total ?? 0" label="Views all time" [accent]="totalAccent" />
+</section>
+
+<adm-health-panel class="stack" [health]="health()" [busy]="checking()" (check)="check.emit()" />
+
+@if (empty()) {
+  <p class="empty">
+    Nothing archived yet. Press <strong>Sync from Azure</strong> to pull the days the API is still
+    holding; it keeps thirty, and everything it has ever had after that lives here.
+  </p>
+} @else {
+  <div class="grid">
+    <adm-views-chart [days]="data.days" />
+    <adm-operations-chart [days]="data.days" [operations]="data.operations" />
+
+    @if (data.views; as snapshot) {
+      <adm-countries-chart class="grid__wide" [snapshot]="snapshot" />
+    }
+  </div>
+
+  <adm-operations-table class="stack" [operations]="data.operations" />
+  <adm-days-table class="stack" [days]="data.days" />
+}

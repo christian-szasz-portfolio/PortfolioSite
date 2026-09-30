@@ -1,0 +1,15 @@
+<aside class="cv-card tilt-card" [lpgTilt]="tilts.Soft">
+  <p class="cv-card__label" i18n="@@cvCard.label">One page, no scrolling</p>
+  <h3 class="cv-card__title" i18n="@@cvCard.title">The formal version</h3>
+  <p class="cv-card__text" i18n="@@cvCard.text">
+    Prefer it as a document? 4+ years, two platforms, and what changed because I was there. Opens
+    right here.
+  </p>
+
+  <a class="button button--primary button--block" [href]="href" lpgMagnetic (click)="open($event)">
+    <ng-container i18n="@@cvCard.open.cta">Open the CV</ng-container>
+    <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path [attr.d]="glyphs.rightLong" />
+    </svg>
+  </a>
+</aside>

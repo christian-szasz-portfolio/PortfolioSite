@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    /* `node` is here for the coverage spec, which walks the source tree on disk rather than
+       mocking a filesystem. */
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "src/test-setup.ts"]
+}

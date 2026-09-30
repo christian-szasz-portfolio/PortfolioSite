@@ -1,0 +1,62 @@
+<section class="hero" id="top" [class.is-ready]="ready()">
+  <div class="hero__backdrop" aria-hidden="true">
+    <common-circuit-field />
+    <span class="hero__glow" [style.--mx]="glowX()" [style.--my]="glowY()"></span>
+    <span class="hero__orb hero__orb--a" [lpgParallax]="0.14"></span>
+    <span class="hero__orb hero__orb--b" [lpgParallax]="-0.09"></span>
+  </div>
+
+  <div class="hero__inner">
+    <div class="hero__badges" data-hero-step="0">
+      <p class="hero__eyebrow">
+        <span class="hero__status">
+          <span class="hero__status-face hero__status-face--here">
+            <span class="hero__pin" aria-hidden="true"></span>
+            <ng-container i18n="@@hero.place.text">Sibiu, Romania</ng-container>
+          </span>
+          <span class="hero__status-face hero__status-face--remote">
+            <svg class="hero__wifi" viewBox="0 0 24 24" aria-hidden="true">
+              <path class="hero__wifi-arc hero__wifi-arc--far" [attr.d]="wifiGlyphs.arcFar" />
+              <path class="hero__wifi-arc hero__wifi-arc--near" [attr.d]="wifiGlyphs.arcNear" />
+              <path class="hero__wifi-dot" [attr.d]="wifiGlyphs.dot" />
+            </svg>
+            <ng-container i18n="@@status.remote.text">open to remote work</ng-container>
+          </span>
+        </span>
+      </p>
+
+      <lpg-view-counter />
+    </div>
+
+    <h2 class="hero__title" data-hero-step="1" lpgSplitText i18n="@@hero.title">
+      I build web applications end to end, from the database to the browser.
+    </h2>
+
+    <p class="hero__lede" data-hero-step="2" i18n="@@hero.text">
+      By day: 4+ years of .NET, Angular, React and Azure on cloud accounting products for the Nordic
+      market. The four projects below nobody ordered. I built them to find out how a compiler reads
+      code, and what a processor does between two instructions.
+    </p>
+
+    <div class="hero__actions" data-hero-step="3">
+      <a class="button button--primary" [routerLink]="[]" fragment="work" lpgMagnetic>
+        <ng-container i18n="@@hero.work.cta">See what I build</ng-container>
+        <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path [attr.d]="arrowGlyphs.down" />
+        </svg>
+      </a>
+      <a
+        class="button button--ghost"
+        [routerLink]="[]"
+        fragment="about"
+        lpgMagnetic
+        i18n="@@hero.about.cta"
+        >More about me</a
+      >
+    </div>
+
+    <div data-hero-step="4">
+      <lpg-stat-list [stats]="stats" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Browser not supported - Christian-Ioan Szasz</title>
+
+  <!-- Only Internet Explorer belongs here. A current browser that lands on this
+       page (a stale link, the /unsupported route) is sent back to the home page;
+       Internet Explorer, which is what this check looks for, stays. With no
+       scripting nothing runs, so the page and its noscript banner still show. -->
+  <script type="text/javascript">
+    (function () {
+      var isIE = document.documentMode || /MSIE |Trident\//.test(navigator.userAgent);
+      if (!isIE) {
+        window.location.replace('/');
+      }
+    })();
+  </script>
+
+  <style type="text/css">
+    /* Legacy CSS on purpose: this page has to render in Internet Explorer, so
+       there are no custom properties, no flexbox and no rem units here. It is a
+       single light, warning-styled sheet: no dark theme. */
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f1f3f7;
+      color: #5c4a00;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    a {
+      color: #0a58ca;
+    }
+
+    a:hover {
+      color: #0847a6;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    /* The banner only the noscript path shows: a full-width bar across the top. */
+    table.banner {
+      width: 100%;
+    }
+
+    td.banner-cell {
+      padding: 14px 20px;
+      background-color: #ffe08a;
+      border-bottom: 2px solid #e0a800;
+      color: #4d3d00;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* The centring wrapper: a full-height table with the card in one cell. */
+    td.frame {
+      text-align: center;
+      vertical-align: middle;
+      padding: 40px 20px;
+    }
+
+    /* The warning card: amber ground, amber border, amber text. */
+    table.card {
+      width: 580px;
+      margin: 0 auto;
+      text-align: left;
+      background-color: #fff4ce;
+      border: 2px solid #e0a800;
+    }
+
+    td.icon-cell {
+      width: 64px;
+      padding: 32px 0 32px 32px;
+      vertical-align: top;
+    }
+
+    td.card-body {
+      padding: 32px 36px 32px 20px;
+    }
+
+    h1 {
+      margin: 0 0 14px 0;
+      font-size: 24px;
+      font-weight: bold;
+      color: #6b5300;
+    }
+
+    p {
+      margin: 0 0 14px 0;
+      color: #5c4a00;
+    }
+
+    p.lead {
+      color: #5c4a00;
+    }
+
+    ul.browsers {
+      margin: 4px 0 18px 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    ul.browsers li {
+      margin-bottom: 8px;
+    }
+
+    ul.browsers img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    p.foot {
+      margin: 22px 0 0 0;
+      padding-top: 16px;
+      border-top: 1px solid #e6cf7a;
+      color: #7a6a2e;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    The <noscript> block renders only when scripting is turned off, so this
+    banner appears for that reader alone and never otherwise. It sits at block
+    level in the body, where the table it wraps is valid content.
+  -->
+  <noscript>
+    <table class="banner" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="banner-cell">
+          <strong>JavaScript is turned off.</strong>
+          This site needs JavaScript as well as a current browser. Please turn
+          it on in your browser settings.
+        </td>
+      </tr>
+    </table>
+  </noscript>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="height: 100%;">
+    <tr>
+      <td class="frame">
+        <table class="card" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="icon-cell">
+              <!-- A warning triangle, drawn inline so it needs no font or file. -->
+              <img src="/icons/warning.svg" width="48" height="48"
+                   alt="Warning" style="display: block;" />
+            </td>
+            <td class="card-body">
+              <h1>This browser is not supported</h1>
+
+              <p class="lead">
+                You are viewing this in Internet Explorer 11 or an earlier
+                version. This site is built with newer web technology that
+                Internet Explorer cannot run, so it cannot be shown here.
+              </p>
+
+              <p>Please open the site in a current browser instead:</p>
+
+              <ul class="browsers">
+                <li>
+                  <img src="/icons/edge.svg" width="20" height="20" alt="" />
+                  <a href="https://www.microsoft.com/edge">Microsoft Edge</a>
+                </li>
+                <li>
+                  <img src="/icons/chrome.svg" width="20" height="20" alt="" />
+                  <a href="https://www.google.com/chrome/">Google Chrome</a>
+                </li>
+                <li>
+                  <img src="/icons/firefox.svg" width="20" height="20" alt="" />
+                  <a href="https://www.mozilla.org/firefox/">Mozilla Firefox</a>
+                </li>
+                <li>
+                  <img src="/icons/safari.svg" width="20" height="20" alt="" />
+                  <a href="https://www.apple.com/safari/">Apple Safari</a>
+                </li>
+              </ul>
+
+              <p>
+                Any of these, kept up to date, will show the site as intended.
+              </p>
+
+              <p class="foot">
+                Christian-Ioan Szasz &#183; Full-Stack Software Engineer
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

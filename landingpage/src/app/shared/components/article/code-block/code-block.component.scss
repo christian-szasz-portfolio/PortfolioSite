@@ -1,0 +1,93 @@
+.code {
+  display: block;
+  margin-top: var(--space-5);
+  overflow: hidden;
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius);
+  background-color: var(--code-surface);
+
+  &__chrome {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--code-border);
+  }
+
+  // Holds the label and caption together, so the copy control sits at the end.
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__language {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__caption {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ink-muted);
+    font-size: var(--step--2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // A long line scrolls inside the block; the page never scrolls sideways.
+  &__scroll {
+    overflow-x: auto;
+  }
+
+  &__pre {
+    margin: 0;
+    padding: var(--space-4);
+  }
+
+  &__source {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.6;
+    tab-size: 2;
+  }
+
+  // Syntax colours; a plain run keeps the --ink above. Measured both themes.
+  &__token {
+    &--comment {
+      color: var(--code-comment);
+      font-style: italic;
+    }
+
+    &--string {
+      color: var(--code-string);
+    }
+
+    &--keyword {
+      color: var(--code-keyword);
+    }
+
+    &--type {
+      color: var(--code-type);
+    }
+
+    &--number {
+      color: var(--code-number);
+    }
+
+    &--function {
+      color: var(--code-function);
+    }
+
+    &--attribute {
+      color: var(--code-attribute);
+    }
+  }
+}

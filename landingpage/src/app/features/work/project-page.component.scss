@@ -1,0 +1,25 @@
+.project-page {
+  display: grid;
+  gap: var(--space-6);
+  padding-bottom: var(--space-9);
+
+  &__articles {
+    min-width: 0;
+  }
+
+  // Below two columns the contents list is noise; the reader passes every heading
+  &__contents {
+    display: none;
+  }
+
+  @media (width >= 62rem) {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: var(--space-8);
+
+    // Stretched: a sticky child only travels inside a taller containing block
+    &__contents {
+      display: block;
+      height: 100%;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# Everything the build makes for itself, and everything only a developer's machine needs.
+# The obj folders matter most: their restore files point at Windows paths, which break a
+# --no-restore publish inside the container.
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/.angular
+**/e2e-results
+**/TestResults
+.git
+.vs
+.vscode
+.claude
+docs

@@ -1,0 +1,28 @@
+@let data = analytics.overview();
+
+<adm-admin-bar
+  [archiveLocation]="data?.archiveLocation ?? null"
+  [source]="data?.source ?? ''"
+  [live]="data?.isLive ?? false"
+  [report]="analytics.synced()"
+  [busy]="analytics.busy()"
+  (sync)="sync()"
+/>
+
+@if (analytics.error(); as failed) {
+  <p class="alert">
+    {{ failed }}
+    <span class="alert__hint"
+      >Is the admin service running, and does it have the connection string?</span
+    >
+  </p>
+}
+
+@if (data; as archive) {
+  <adm-dashboard
+    [overview]="archive"
+    [health]="analytics.health()"
+    [checking]="analytics.checking()"
+    (check)="checkHealth()"
+  />
+}

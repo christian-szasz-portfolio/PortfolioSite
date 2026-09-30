@@ -1,0 +1,59 @@
+@let item = project();
+
+<div class="project-hero">
+  <lpg-breadcrumbs [trail]="trail()" />
+
+  <div class="project-hero__body">
+    <lpg-page-header
+      [eyebrow]="'Project ' + item.index"
+      [heading]="item.title"
+      [lede]="item.tagline"
+    >
+      <p class="project-hero__meta">
+        <span class="project-hero__reading">{{ words() | readingTime }}</span>
+        <span class="project-hero__divider" aria-hidden="true">·</span>
+        <span class="project-hero__languages">{{ item.languages.join(', ') }}</span>
+      </p>
+
+      <lpg-chip-list [items]="item.chips" [label]="item.title + ' stack'" />
+
+      <p class="project-hero__links">
+        @if (item.repository) {
+          <a class="link link--repo" [href]="item.repository" lpgMagnetic>
+            <common-github-icon />
+            @if (item.demoVariant) {
+              <ng-container i18n="@@project.demoRepository.cta"
+                >View the demo repository</ng-container
+              >
+            } @else {
+              <ng-container i18n="@@project.repository.cta">View the repository</ng-container>
+            }
+          </a>
+        } @else if (item.repositoryNote) {
+          <span class="link link--note">
+            <lpg-icon name="closed" />
+            {{ item.repositoryNote }}
+          </span>
+        }
+
+        @if (item.demo) {
+          <a class="link link--demo" [href]="item.demo | demoUrl" lpgMagnetic>
+            <lpg-icon name="demo" />
+            <ng-container i18n="@@project.demo.cta">Open the live demo</ng-container>
+          </a>
+        }
+      </p>
+    </lpg-page-header>
+
+    <div class="project-hero__media">
+      <lpg-media-frame
+        [label]="item.media.label"
+        [poster]="item.media.poster"
+        [clip]="item.media.clip"
+        [alt]="item.media.alt"
+        [tilt]="tilts.Soft"
+        [transitionName]="'project-' + item.slug"
+      />
+    </div>
+  </div>
+</div>

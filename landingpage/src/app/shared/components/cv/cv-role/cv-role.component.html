@@ -1,0 +1,31 @@
+@let item = role();
+
+<article class="cv-role">
+  <div class="cv-role__header">
+    <h3 class="cv-role__title">{{ item.title }}</h3>
+    <p class="cv-role__period">{{ item.period }}</p>
+  </div>
+
+  <p class="cv-role__project">{{ item.project }}</p>
+
+  @if (item.context) {
+    <p class="cv-role__context">{{ item.context }}</p>
+  }
+
+  @for (achievement of item.achievements; track achievement.lead) {
+    <p class="cv-role__achievement">
+      <strong class="cv-role__achievement-lead">{{ achievement.lead }}</strong
+      >{{ achievement.rest }}
+    </p>
+  }
+
+  @if (item.points; as points) {
+    <ul class="cv-role__points">
+      @for (point of points; track point) {
+        <li class="cv-role__point">{{ point }}</li>
+      }
+    </ul>
+  }
+
+  <p class="cv-role__skills">{{ item.skills }}</p>
+</article>

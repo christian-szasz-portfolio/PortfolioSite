@@ -1,0 +1,19 @@
+<figure class="code">
+  <figcaption class="code__chrome">
+    <span class="code__meta">
+      <span class="code__language">{{ language() }}</span>
+
+      @if (caption(); as text) {
+        <span class="code__caption">{{ text }}</span>
+      }
+    </span>
+
+    <lpg-copy-button [value]="source()" [label]="language() + ' snippet'" />
+  </figcaption>
+
+  <div class="code__scroll">
+    <pre
+      class="code__pre"
+    ><code class="code__source">@for (token of tokens(); track $index) {<span class="code__token code__token--{{ token.type }}">{{ token.text }}</span>}</code></pre>
+  </div>
+</figure>

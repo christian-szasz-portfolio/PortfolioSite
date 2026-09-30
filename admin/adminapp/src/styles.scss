@@ -1,0 +1,80 @@
+/*
+ * A local tool, so it commits to one look rather than following a system theme. The dark steps
+ * are selected for this surface and validated against it, not flipped from a light set.
+ *
+ * Only what is genuinely global lives here: the tokens, the page itself, and the table, which is
+ * one block two features draw. Everything else is styled by the component that owns its markup.
+ */
+
+@layer tokens, base, blocks;
+
+@layer tokens {
+  :root {
+    --surface: #1a1a19;
+    --plane: #0d0d0d;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --ring: rgb(255 255 255 / 10%);
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --critical: #d03b3b;
+    --warning: #fab219;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 24px;
+    background: var(--plane);
+    color: var(--ink);
+    font:
+      14px/1.5 system-ui,
+      -apple-system,
+      'Segoe UI',
+      sans-serif;
+  }
+}
+
+@layer blocks {
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--axis);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--grid);
+  }
+
+  .table__number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* A day something was turned away, which is worth noticing. Zero is not. */
+  .table__warn {
+    color: var(--warning);
+  }
+}

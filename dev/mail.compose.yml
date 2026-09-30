@@ -1,0 +1,23 @@
+# A mail server on this machine, so the digest can be sent and read without a real mailbox.
+#
+#   docker compose -f dev/mail.compose.yml up -d
+#   http://localhost:8025          everything it has caught
+#   docker compose -f dev/mail.compose.yml down
+#
+# Mailpit accepts any sender, any recipient and any credentials, and delivers nothing onward.
+
+services:
+  mail:
+    image: axllent/mailpit:latest
+    container_name: portfolio-mail
+    restart: unless-stopped
+    ports:
+      # SMTP, which the API and the tools post to.
+      - "1025:1025"
+      # The web interface, which is where a digest is read.
+      - "8025:8025"
+    environment:
+      # A local catcher, so a login is accepted rather than demanded.
+      MP_SMTP_AUTH_ACCEPT_ANY: "true"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "true"
+      MP_MAX_MESSAGES: "500"

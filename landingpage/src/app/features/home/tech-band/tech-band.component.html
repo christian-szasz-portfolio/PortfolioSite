@@ -1,0 +1,10 @@
+<section
+  class="marquee-band"
+  #band
+  i18n-aria-label="@@tech.label"
+  aria-label="Technologies I work with"
+>
+  @for (row of rows; track $index) {
+    <lpg-marquee [items]="row" [reverse]="$odd" />
+  }
+</section>

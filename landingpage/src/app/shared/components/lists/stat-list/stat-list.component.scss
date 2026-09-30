@@ -1,0 +1,59 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: var(--space-6);
+  margin-top: var(--space-8);
+  padding-block: var(--space-6);
+  // Closed on both sides, so the strip ends rather than trailing off
+  border-block: 1px solid var(--line);
+}
+
+.stat {
+  padding-inline: var(--space-5);
+  border-left: 1px solid var(--line);
+
+  // Two per row here, so every odd cell opens one and carries no rule
+  &:nth-child(odd) {
+    padding-inline-start: 0;
+    border-left: 0;
+  }
+
+  &__label {
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+    font-weight: 550;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__suffix {
+    color: var(--accent);
+  }
+}
+
+// One row of four, so only the first cell opens the strip
+@media (width >= 48rem) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat {
+    &:nth-child(odd) {
+      padding-inline-start: var(--space-5);
+      border-left: 1px solid var(--line);
+    }
+
+    &:first-child {
+      padding-inline-start: 0;
+      border-left: 0;
+    }
+  }
+}

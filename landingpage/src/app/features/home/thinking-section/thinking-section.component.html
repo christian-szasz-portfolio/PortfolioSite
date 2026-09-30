@@ -1,0 +1,18 @@
+<section class="section section--thinking" id="thinking" lpgSectionSpy="thinking">
+  <div class="section__inner">
+    <lpg-section-header
+      i18n-eyebrow="@@thinking.eyebrow.label"
+      eyebrow="How I think"
+      i18n-heading="@@thinking.title"
+      heading="Three opinions I keep coming back to"
+      i18n-lede="@@thinking.text"
+      lede="Held loosely enough to argue about, firmly enough that they show in how I work."
+    />
+
+    <ul class="pillars" lpgRevealGroup>
+      @for (pillar of pillars; track pillar.index) {
+        <lpg-pillar-card [pillar]="pillar" />
+      }
+    </ul>
+  </div>
+</section>

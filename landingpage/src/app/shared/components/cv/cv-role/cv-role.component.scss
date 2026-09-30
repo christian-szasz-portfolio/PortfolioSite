@@ -1,0 +1,91 @@
+.cv-role {
+  margin-bottom: 3mm;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4mm;
+  }
+
+  &__title {
+    color: var(--cv-title);
+    font-size: 11pt;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  &__period {
+    color: var(--cv-muted);
+    font-size: 8.4pt;
+    white-space: nowrap;
+  }
+
+  &__project {
+    margin-bottom: 1.8mm;
+    color: var(--cv-muted);
+    font-size: 8.2pt;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  &__context {
+    margin-bottom: 1.8mm;
+    text-align: justify;
+  }
+
+  &__achievement {
+    position: relative;
+    margin-bottom: 1.8mm;
+    padding-left: 6.5mm;
+    text-align: justify;
+
+    // Drawn, not written, so it cannot be selected with the sentence
+    &::before {
+      content: '\2192';
+      position: absolute;
+      top: -0.4mm;
+      left: 0;
+      color: var(--cv-ink);
+      font-size: 11pt;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+  }
+
+  &__achievement-lead {
+    color: var(--cv-ink);
+    font-weight: 700;
+  }
+
+  // The compact form, where the work is supporting detail rather than a claim
+  &__points {
+    margin-bottom: 1.8mm;
+  }
+
+  &__point {
+    position: relative;
+    margin-bottom: 1.2mm;
+    padding-left: 6.5mm;
+    text-align: justify;
+
+    &::before {
+      content: '\2022';
+      position: absolute;
+      left: 1.8mm;
+      color: var(--cv-ink);
+      font-weight: 700;
+    }
+  }
+
+  &__skills {
+    color: var(--cv-muted);
+  }
+
+  @media print {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,58 @@
+.pager {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  padding-top: var(--space-7);
+  border-top: 1px solid var(--line);
+
+  &__link {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--surface-1);
+    text-decoration: none;
+    transition:
+      border-color var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+
+    &:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    // The next project reads right-aligned, as the direction implies.
+    &--next {
+      text-align: end;
+    }
+  }
+
+  &__direction {
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    color: var(--ink);
+    font-size: var(--step-1);
+    font-weight: 650;
+  }
+
+  &__tagline {
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+  }
+
+  @media (width >= 48rem) {
+    grid-template-columns: 1fr 1fr;
+
+    // A single neighbour keeps its own side of the row.
+    &__link--next:only-child {
+      grid-column: 2;
+    }
+  }
+}

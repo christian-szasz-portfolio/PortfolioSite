@@ -1,0 +1,49 @@
+.toc {
+  display: block;
+
+  &__label {
+    margin-bottom: var(--space-3);
+    color: var(--ink-faint);
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__list {
+    display: grid;
+    gap: var(--space-1);
+    border-inline-start: 1px solid var(--line);
+  }
+
+  &__link {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    margin-inline-start: -1px;
+    border-inline-start: 1px solid transparent;
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition:
+      color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+
+    &:hover {
+      color: var(--accent);
+    }
+
+    &.is-current {
+      border-inline-start-color: var(--accent);
+      color: var(--ink);
+      font-weight: 600;
+    }
+  }
+
+  // Rides alongside the articles once there is room for a second column.
+  @media (width >= 62rem) {
+    position: sticky;
+    top: 7rem;
+    max-height: calc(100dvh - 9rem);
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,37 @@
+<lpg-modal-shell
+  [heading]="data.label"
+  headingId="media-modal-title"
+  [closeLabel]="closeLabel"
+  (closed)="close()"
+>
+  @if (data.clip !== null) {
+    <lpg-play-toggle
+      modal-tools
+      [variant]="variants.Tool"
+      [playing]="playback.playing()"
+      (toggled)="togglePlayback()"
+    />
+  }
+
+  <div class="viewer">
+    <div class="viewer__stage">
+      <img class="viewer__image" [src]="data.poster" [alt]="data.alt" />
+
+      @if (data.clip; as clipSource) {
+        <video
+          #video
+          class="viewer__video"
+          [class.is-showing]="playback.visible()"
+          [src]="clipSource"
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-hidden="true"
+          (playing)="playback.onPlaying()"
+          (pause)="playback.onPaused()"
+        ></video>
+      }
+    </div>
+  </div>
+</lpg-modal-shell>

@@ -1,0 +1,120 @@
+.site-footer {
+  border-top: 1px solid var(--line);
+  background-color: var(--surface-1);
+
+  &__inner {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding: var(--space-7) var(--gutter);
+  }
+
+  &__note {
+    max-width: 60ch;
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  &__count {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+
+    // Absent until the counts load: take no space, rather than leaving a blank line.
+    &:not(:has(.view-counter)) {
+      display: none;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    align-items: center;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  // The mark leads the link, and travels the way the link reads.
+  &__icon {
+    display: inline-flex;
+    color: var(--ink-faint);
+    transition:
+      color var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+  }
+
+  &__link:hover &__icon {
+    color: var(--accent);
+  }
+
+  &__link--top:hover &__icon {
+    transform: translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__link:hover &__icon {
+      transform: none;
+    }
+  }
+}
+
+@media (width < 48rem) {
+  .site-footer {
+    &__meta {
+      gap: var(--space-3);
+      justify-content: flex-start;
+    }
+
+    &__links {
+      gap: var(--space-3) var(--space-4);
+    }
+  }
+}
+
+@media (width >= 48rem) {
+  .site-footer {
+    &__inner {
+      gap: var(--space-5);
+    }
+  }
+}
+
+// The marks in the note, and the tooltip each one carries.
+.site-footer__tech {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  // Space before the marks only: a trailing margin puts a gap in front of the comma.
+  margin-inline-start: 0.35ch;
+  vertical-align: middle;
+
+  // lpg-tech-icon is display:contents globally, and a box with no box cannot position a
+  // tooltip against itself.
+  lpg-tech-icon {
+    display: inline-flex;
+  }
+
+  // Above rather than below: this sits at the foot of the page, and a tooltip that opens
+  // downwards there opens into the links row.
+  .tip::after {
+    top: auto;
+    bottom: calc(100% + var(--space-2));
+  }
+}

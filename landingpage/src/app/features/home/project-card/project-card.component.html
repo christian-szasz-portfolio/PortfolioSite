@@ -1,0 +1,63 @@
+@let item = project();
+
+<article
+  class="project"
+  [class.project--reverse]="item.reversed"
+  [class.project--first]="first()"
+  [class.project--slide]="variant() === 'slide'"
+  [lpgReveal]="revealVariant()"
+>
+  <div class="project__media">
+    <lpg-media-frame
+      [label]="item.media.label"
+      [poster]="item.media.poster"
+      [clip]="item.media.clip"
+      [alt]="item.media.alt"
+      [transitionName]="'project-' + item.slug"
+    />
+  </div>
+
+  <div class="project__body" [lpgDrift]="depths.Soft">
+    <p class="project__index" aria-hidden="true">{{ item.index }}</p>
+    <h3 class="project__title">{{ item.title }}</h3>
+    <p class="project__tagline">{{ item.tagline }}</p>
+    <p class="project__summary">{{ item.summary }}</p>
+
+    <lpg-chip-list [items]="item.chips" [label]="item.title + ' stack'" />
+
+    <p class="project__links">
+      <a
+        class="button button--primary"
+        [routerLink]="['/work', item.slug]"
+        [attr.aria-label]="seeMoreLabel(item.title)"
+        lpgMagnetic
+        (click)="opened()"
+      >
+        <ng-container i18n="@@project.seeMore.cta">See more</ng-container>
+        <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path [attr.d]="glyphs.right" />
+        </svg>
+      </a>
+
+      @if (item.repository) {
+        <a class="link link--repo" [href]="item.repository" lpgMagnetic>
+          <common-github-icon />
+          @if (item.demoVariant) {
+            <ng-container i18n="@@project.demoRepository.cta"
+              >View the demo repository</ng-container
+            >
+          } @else {
+            <ng-container i18n="@@project.repository.cta">View the repository</ng-container>
+          }
+        </a>
+      }
+
+      @if (item.demo) {
+        <a class="link link--demo" [href]="item.demo | demoUrl" lpgMagnetic>
+          <lpg-icon name="demo" />
+          <ng-container i18n="@@project.demo.cta">Open the live demo</ng-container>
+        </a>
+      }
+    </p>
+  </div>
+</article>

@@ -1,0 +1,13 @@
+@if (rows().length > 0) {
+  <ul class="view-breakdown">
+    @for (row of rows(); track row.code) {
+      <li class="view-breakdown__row">
+        <span class="view-breakdown__name">{{ row.name }}</span>
+        <span class="view-breakdown__track">
+          <span class="view-breakdown__bar" [style.--share.%]="row.share"></span>
+        </span>
+        <span class="view-breakdown__count">{{ row.count }}</span>
+      </li>
+    }
+  </ul>
+}

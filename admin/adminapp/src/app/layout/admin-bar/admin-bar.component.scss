@@ -1,0 +1,80 @@
+:host {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.bar__line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/*
+ * Which storage is being read. Muted for the emulator, because that is the ordinary case and a
+ * warning that fires every day stops being read; the live one wears the warning colour, since
+ * looking at production is the case worth noticing.
+ */
+.bar__source {
+  padding: 2px 8px;
+  border: 1px solid var(--axis);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bar__source--live {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.bar__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.bar__where {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar__note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.button {
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--series-1);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

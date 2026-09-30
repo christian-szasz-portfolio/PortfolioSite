@@ -1,0 +1,17 @@
+<div class="specs">
+  <table class="specs__table">
+    <caption class="visually-hidden">
+      {{
+        caption()
+      }}
+    </caption>
+    <tbody>
+      @for (row of rows(); track row.key) {
+        <tr class="specs__row">
+          <th class="specs__key" scope="row">{{ row.key }}</th>
+          <td class="specs__value">{{ row.value }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

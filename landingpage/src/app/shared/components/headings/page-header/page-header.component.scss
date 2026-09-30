@@ -1,0 +1,39 @@
+.page-header {
+  display: block;
+
+  &__eyebrow {
+    margin-bottom: var(--space-3);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    // Room above and below the line, so a tall cap or a descender never sits on an edge.
+    padding-block: 0.75rem;
+    font-size: var(--step-3);
+  }
+
+  &__meta {
+    margin-top: var(--space-3);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  &__lede {
+    max-width: var(--measure);
+    margin-top: var(--space-5);
+    color: var(--ink-muted);
+    font-size: var(--step-1);
+  }
+
+  &--centred {
+    text-align: center;
+
+    .page-header__lede {
+      margin-inline: auto;
+    }
+  }
+}

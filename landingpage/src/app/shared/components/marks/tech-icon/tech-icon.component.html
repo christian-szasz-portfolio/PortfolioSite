@@ -1,0 +1,14 @@
+@let item = mark();
+
+@switch (item.kind) {
+  @case (kinds.Brand) {
+    <svg class="tech-icon tech-icon--brand" [attr.viewBox]="viewBox()" aria-hidden="true">
+      @for (path of item.paths; track $index) {
+        <path [attr.d]="path" [attr.fill-rule]="item.evenOdd ? 'evenodd' : null" />
+      }
+    </svg>
+  }
+  @case (kinds.Letters) {
+    <span class="tech-icon tech-icon--letters" aria-hidden="true">{{ item.label }}</span>
+  }
+}

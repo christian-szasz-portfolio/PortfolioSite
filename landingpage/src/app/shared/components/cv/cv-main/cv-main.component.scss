@@ -1,0 +1,51 @@
+.cv {
+  &__main {
+    display: flex;
+    flex-direction: column;
+    padding: 7mm var(--cv-pad-main) 3mm;
+  }
+}
+
+.cv-section {
+  margin-bottom: 4.5mm;
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    margin-bottom: 2.5mm;
+    color: var(--cv-ink);
+    font-size: 12.5pt;
+    font-weight: 800;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+
+    // A rule that runs from the words to the right margin
+    &::after {
+      content: '';
+      flex: 1 1 auto;
+      height: 0.3mm;
+      background-color: var(--cv-ink);
+    }
+  }
+}
+
+.cv-about {
+  &__paragraph {
+    margin-bottom: 2.5mm;
+    text-align: justify;
+  }
+
+  &__highlight {
+    color: var(--cv-ink);
+    font-weight: 700;
+  }
+}
+
+.cv-page-number {
+  // Pinned to the foot of the column however short the content runs
+  margin-top: auto;
+  color: var(--cv-faint);
+  font-size: 10pt;
+  text-align: right;
+}

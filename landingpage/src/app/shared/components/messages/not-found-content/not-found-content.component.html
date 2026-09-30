@@ -1,0 +1,32 @@
+<div class="section__inner message-page">
+  <lpg-page-header
+    eyebrow="404"
+    [centred]="true"
+    i18n-heading="@@notFound.title"
+    heading="That page is not here"
+    i18n-lede="@@notFound.text"
+    lede="Either the address is wrong or something moved. Nothing was lost: the site is a handful of pages and they are all listed below."
+  />
+
+  <nav class="missing" i18n-aria-label="@@notFound.nav.label" aria-label="Everywhere else">
+    <section class="card-panel">
+      <h2 class="card-panel__title" i18n="@@notFound.panel.title">Project pages</h2>
+
+      <ul class="card-panel__list">
+        @for (project of projects; track project.slug) {
+          <li class="card-panel__item">
+            <a class="card-panel__card" [routerLink]="['/work', project.slug]">
+              <span class="card-panel__label" i18n="@@notFound.panel.project.label">Project</span>
+              <span class="card-panel__name">{{ project.title }}</span>
+              <span class="card-panel__text">{{ project.tagline }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <a class="button button--primary" routerLink="/" i18n="@@notFound.home.cta">
+      Back to the home page
+    </a>
+  </nav>
+</div>

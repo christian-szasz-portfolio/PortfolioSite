@@ -1,0 +1,54 @@
+<div class="carousel" role="group" aria-roledescription="carousel" [attr.aria-label]="label()">
+  <div
+    class="carousel__track"
+    #track
+    tabindex="0"
+    [attr.aria-label]="label() + ', scrollable'"
+    (scroll)="onScroll()"
+  >
+    <ng-content />
+  </div>
+
+  @if (overflowing()) {
+    <div class="carousel__controls">
+      <button
+        class="carousel__button"
+        type="button"
+        [attr.aria-label]="'Previous, ' + label()"
+        [disabled]="atStart()"
+        (click)="page(-1)"
+      >
+        <svg class="carousel__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path [attr.d]="glyphs.previous" />
+        </svg>
+      </button>
+
+      <ol class="carousel__dots">
+        @for (index of slides(); track index) {
+          <li>
+            <button
+              class="carousel__dot"
+              type="button"
+              [class.is-current]="current() === index"
+              [attr.aria-label]="'Go to ' + (index + 1) + ' of ' + count()"
+              [attr.aria-current]="current() === index ? 'true' : null"
+              (click)="goTo(index)"
+            ></button>
+          </li>
+        }
+      </ol>
+
+      <button
+        class="carousel__button"
+        type="button"
+        [attr.aria-label]="'Next, ' + label()"
+        [disabled]="atEnd()"
+        (click)="page(1)"
+      >
+        <svg class="carousel__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path [attr.d]="glyphs.next" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

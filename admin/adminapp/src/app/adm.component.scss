@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.alert {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--critical);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.alert__hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}

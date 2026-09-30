@@ -1,0 +1,86 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/landingpage/dist
+/tmp
+/landingpage/out-tsc
+/bazel-out
+
+# Node
+/landingpage/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# Miscellaneous
+/landingpage/.angular/cache
+.sass-cache/
+/connect.lock
+/landingpage/coverage
+/landingpage/e2e-results
+/libpeerconnection.log
+testem.log
+/landingpage/typings
+__screenshots__/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Working notes. The scratch Playwright scripts and logs stay on disk; the handover is
+# tracked, because one that exists only on this machine hands nothing over. The repository
+# is private and the file holds no secrets.
+/docs/*
+!/docs/HANDOVER.md
+
+# .NET counter API (analytics/ holds Domain, Infrastructure, Api and Tools; tests in analytics.tests/)
+[Bb]in/
+[Oo]bj/
+# Nothing to hide here: the Development settings hold only the well-known Azurite
+# connection string. A real one belongs in an environment variable or user secrets,
+# never in a file, so no appsettings file is ignored.
+
+# Third-party GeoIP database (DB-IP Lite, CC BY 4.0): not redistributed here.
+# Fetch it with: dotnet run --project analytics/Analytics.Tools
+analytics/Analytics.Api/Data/*.mmdb
+
+# The digest preview the tools write for a look before SMTP is wired. Generated, not kept.
+digest-preview.html
+
+# Deployment output: a publish folder and the zip that goes to App Service.
+/publish/
+api.zip
+
+# The live storage connection string, for the admin tool's production mode. A secret,
+# and the only way into everything the site has collected. The .example beside it is
+# tracked and holds no key.
+/dev/admin-live.env.cmd
+
+# The admin tool: a local dashboard that is never deployed.
+/admin/adminapp/node_modules
+/admin/adminapp/.angular/cache
+/admin/adminapp/dist
+# Built by the adminapp build, served by the service.
+/admin/Admin.Api/wwwroot/
+
+# Agent instructions stay local
+CLAUDE.md
+.claude/
+docs/HANDOVER.md

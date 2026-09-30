@@ -1,0 +1,31 @@
+# Christian-Ioan Szasz — Software Engineer
+
+> Full-stack engineer who builds web applications end to end, from the database to the browser. Over four years on cloud accounting SaaS for the Nordic market with .NET, Angular, React and Azure. The four projects below were not ordered by anyone; they were built to learn how a compiler reads code and what a processor does between two instructions.
+
+This site is prerendered to static HTML in English, German and Romanian, so every address is a real file and its full content is in the page a crawler receives. A first-party analytics API records only anonymous, consented visits, and no personal data.
+
+## Projects
+
+- [Stack86](https://christianszasz.dev/work/stack86): a browser IDE that compiles nine languages down to 8086 assembly, then runs the result on an emulator you can single-step. Compilation runs on the server, each language checked by its own toolchain; execution runs in the browser, one instruction at a time. Source: https://github.com/christian-szasz-portfolio/Stack86 — Demo: https://stack86.christianszasz.dev
+- [Taskly](https://christianszasz.dev/work/taskly): project and issue tracking with a Kanban board, epics, time tracking, reporting and real-time notifications, on .NET 10 and Angular 22. A CQRS backend where controllers only dispatch, and a board that updates live over SignalR. Source: https://github.com/christian-szasz-portfolio/Taskly — Demo: https://taskly.christianszasz.dev
+- [Assembler](https://christianszasz.dev/work/assembler): a desktop .NET MAUI CPU simulator that assembles a 47-instruction set and executes it one microcode step at a time, with the datapath drawn and lit as it goes. The simulator core knows nothing about the screen.
+- [Portfolio site](https://christianszasz.dev/work/portfolio): this site itself, prerendered in three languages with a consent-gated first-party analytics API. Source: https://github.com/christian-szasz-portfolio/PortfolioSite
+
+## Pages
+
+- [Home](https://christianszasz.dev/): introduction, the four projects, and background.
+- [CV](https://christianszasz.dev/cv): experience and skills, openable as a document.
+- [Privacy](https://christianszasz.dev/privacy): what the site stores and the lawful basis.
+- [Terms](https://christianszasz.dev/terms): terms of use.
+
+## Languages
+
+- English: https://christianszasz.dev/
+- German: https://christianszasz.dev/de-DE/
+- Romanian: https://christianszasz.dev/ro-RO/
+
+## Contact
+
+- Email: christian.ioan.szasz@gmail.com
+- LinkedIn: https://www.linkedin.com/in/christian-szasz
+- GitHub: https://github.com/christian-szasz-portfolio

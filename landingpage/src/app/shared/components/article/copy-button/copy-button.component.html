@@ -1,0 +1,22 @@
+<button
+  class="copy"
+  type="button"
+  [class.is-copied]="state() === 'copied'"
+  [attr.aria-label]="buttonLabel()"
+  (click)="copy()"
+>
+  @if (state() === 'copied') {
+    <svg class="copy__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path [attr.d]="glyphs.check" />
+    </svg>
+  } @else {
+    <svg class="copy__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path [attr.d]="glyphs.copyFront" />
+      <path [attr.d]="glyphs.copySheet" />
+    </svg>
+  }
+
+  <span class="copy__text">{{ state() === 'copied' ? 'Copied' : 'Copy' }}</span>
+</button>
+
+<p class="visually-hidden" role="status">{{ announcement() }}</p>

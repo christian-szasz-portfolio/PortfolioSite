@@ -1,0 +1,18 @@
+<nav class="toc" [attr.aria-label]="label()">
+  <p class="toc__label">{{ label() }}</p>
+
+  <ol class="toc__list">
+    @for (entry of entries(); track entry.id) {
+      <li class="toc__item">
+        <a
+          class="toc__link"
+          [routerLink]="[]"
+          [fragment]="entry.id"
+          [class.is-current]="active() === entry.id"
+          [attr.aria-current]="active() === entry.id ? 'true' : null"
+          >{{ entry.heading }}</a
+        >
+      </li>
+    }
+  </ol>
+</nav>

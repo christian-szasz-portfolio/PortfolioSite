@@ -1,0 +1,1088 @@
+// Global stylesheet: tokens, reset, and the primitives no single component owns.
+
+@layer tokens, base, blocks, motion, utilities;
+
+// Poppins, for the CV alone, self-hosted so no visitor is sent to Google for it
+$cv-font-subsets: (
+  latin:
+    'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
+  latin-ext:
+    'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF',
+);
+
+@each $weight in 400, 500, 700, 800 {
+  @each $subset, $range in $cv-font-subsets {
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: $weight;
+      font-display: swap;
+      src: url('/assets/fonts/poppins/poppins-#{$subset}-#{$weight}-normal.woff2') format('woff2');
+      unicode-range: #{$range};
+    }
+  }
+}
+
+@layer base {
+  lpg-root {
+    display: contents;
+  }
+
+  // Hosts are transparent to layout, so grids see the elements inside them.
+  lpg-about-section,
+  lpg-article-block,
+  common-brand-mark,
+  lpg-breadcrumbs,
+  lpg-carousel,
+  lpg-callout,
+  lpg-chip-list,
+  lpg-circuit-field,
+  lpg-code-block,
+  lpg-consent-banner,
+  lpg-contact-list,
+  lpg-cookies-content,
+  lpg-cookies-viewer,
+  lpg-copy-button,
+  lpg-cursor,
+  lpg-cv-card,
+  lpg-cv-document,
+  lpg-cv-main,
+  lpg-cv-page,
+  lpg-cv-role,
+  lpg-cv-sidebar,
+  lpg-disclosure,
+  lpg-figure-block,
+  common-flag,
+  lpg-formula-field,
+  common-github-icon,
+  lpg-grain,
+  lpg-hero-section,
+  lpg-home,
+  lpg-icon,
+  lpg-language-switcher,
+  lpg-media-frame,
+  lpg-media-viewer,
+  lpg-not-found,
+  lpg-not-found-content,
+  lpg-page-header,
+  lpg-pillar-card,
+  lpg-privacy-policy-content,
+  lpg-privacy-policy-viewer,
+  lpg-profile-section,
+  lpg-project-article,
+  lpg-project-card,
+  lpg-project-hero,
+  lpg-project-page,
+  lpg-project-pager,
+  lpg-prose,
+  lpg-modal-shell,
+  lpg-scroll-progress,
+  lpg-section-header,
+  lpg-site-footer,
+  lpg-site-header,
+  lpg-sitemap,
+  lpg-spec-table,
+  lpg-stat-list,
+  lpg-table-of-contents,
+  lpg-tech-band,
+  lpg-tech-icon,
+  lpg-terms-content,
+  lpg-terms-viewer,
+  lpg-thinking-section,
+  lpg-unsupported,
+  lpg-view-breakdown,
+  lpg-view-counter,
+  lpg-work-section {
+    display: contents;
+  }
+
+  lpg-marquee {
+    display: block;
+    min-width: 0;
+  }
+}
+
+@layer tokens {
+  // Dark is the default and does not follow the OS setting.
+  :root {
+    --surface-0: #0b1017;
+    --surface-1: #111823;
+    --surface-2: #18212e;
+    --surface-3: #1f2a39;
+
+    // Contrast measured against the worst surface each sits on.
+    --ink: #e8eef6;
+    --ink-muted: #9fb0c3;
+    --ink-faint: #7e91a8;
+
+    // Two blues: the lifted tint for text, the solid one for filled buttons.
+    --accent: #4f9bec;
+    --accent-strong: #7fb6f2;
+    --accent-solid: #0a66c2;
+    --accent-solid-hover: #0b74dc;
+    --on-accent: #ffffff;
+
+    // The error viewer's amber, the same hue --code-number already uses.
+    --warning-surface: #3a2c12;
+    --warning-ink: #f2c98b;
+
+    // The status banner's calm blue, a deep tint of the accent.
+    --info-surface: #10243a;
+    --info-ink: #b9d8f7;
+
+    // The code surface sits below the page, so a block reads as inset.
+    --code-surface: #070c12;
+    --code-border: #2b3a4d;
+
+    // Syntax colours, measured against the near-black code surface.
+    --code-comment: #7f93a8;
+    --code-string: #8fd39d;
+    --code-keyword: #6ea8fe;
+    --code-type: #56cdd6;
+    --code-number: #e2ab6d;
+    --code-function: #e6cf85;
+    --code-attribute: #c3a6ef;
+
+    --line: rgb(255 255 255 / 9%);
+    --line-strong: rgb(255 255 255 / 16%);
+
+    // Quiet enough to ignore while reading, solid enough to grab.
+    --scroll-thumb: rgb(255 255 255 / 20%);
+    --scroll-thumb-hover: rgb(255 255 255 / 38%);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 30%), 0 12px 32px rgb(0 0 0 / 28%);
+    --shadow-media: 0 2px 6px rgb(0 0 0 / 35%), 0 24px 60px rgb(0 0 0 / 45%);
+    --glow: rgb(79 155 236 / 16%);
+    --scrim: rgb(11 16 23 / 82%);
+
+    // System stack only, so the page makes no external request.
+    --font-sans:
+      'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial,
+      sans-serif;
+    --font-mono: 'Cascadia Code', 'Cascadia Mono', Consolas, 'SF Mono', ui-monospace, monospace;
+
+    --step--2: clamp(0.6875rem, 0.67rem + 0.09vw, 0.75rem);
+    --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);
+    --step-0: clamp(1rem, 0.97rem + 0.2vw, 1.125rem);
+    --step-1: clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);
+    --step-2: clamp(1.375rem, 1.24rem + 0.6vw, 1.75rem);
+    --step-3: clamp(2rem, 1.6rem + 1.6vw, 3rem);
+    --step-4: clamp(2.5rem, 1.8rem + 3.4vw, 5rem);
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+    --space-9: clamp(4.5rem, 3rem + 7vw, 11rem);
+
+    --shell: 76rem;
+    // The line length long-form prose is set to.
+    --measure: 68ch;
+    --gutter: clamp(1.25rem, 4vw, 2.5rem);
+    --radius-sm: 6px;
+    --radius: 12px;
+    --radius-lg: 18px;
+
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --duration: 220ms;
+
+    color-scheme: dark;
+  }
+
+  // Same names, measured again: every pair still clears 4.5:1.
+  [data-theme='light'] {
+    --surface-0: #f5f7fa;
+    --surface-1: #ffffff;
+    --surface-2: #eef2f7;
+    --surface-3: #e3eaf3;
+
+    --ink: #16202b;
+    --ink-muted: #4d5f72;
+    --ink-faint: #5c6e80;
+
+    --accent: #0a66c2;
+    --accent-strong: #004182;
+    --accent-solid: #0a66c2;
+    --accent-solid-hover: #004182;
+    --on-accent: #ffffff;
+
+    --warning-surface: #fdf1de;
+    --warning-ink: #6b4300;
+
+    --info-surface: #e7f0fa;
+    --info-ink: #0b3f73;
+
+    --code-surface: #eef2f7;
+    --code-border: #b6c4d4;
+
+    --code-comment: #5b6773;
+    --code-string: #1a7f37;
+    --code-keyword: #0a58b8;
+    --code-type: #0b6d78;
+    --code-number: #98500e;
+    --code-function: #795600;
+    --code-attribute: #6f42c1;
+
+    --line: rgb(16 32 48 / 12%);
+    --line-strong: rgb(16 32 48 / 20%);
+
+    --scroll-thumb: rgb(16 32 48 / 24%);
+    --scroll-thumb-hover: rgb(16 32 48 / 45%);
+    --shadow-card: 0 1px 2px rgb(16 32 48 / 6%), 0 12px 28px rgb(16 32 48 / 8%);
+    --shadow-media: 0 2px 6px rgb(16 32 48 / 8%), 0 24px 50px rgb(16 32 48 / 14%);
+    --glow: rgb(10 102 194 / 10%);
+    --scrim: rgb(245 247 250 / 85%);
+
+    color-scheme: light;
+  }
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* `scrollbar-width`/`scrollbar-color` are inherited, so stating them once on the root
+       reaches every scrolling box on the site. WebKit pseudo-elements follow for the rounded
+       thumb those two properties cannot express. */
+  :root {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+  }
+
+  /* Guarded: a browser honouring `scrollbar-width` ignores these pseudo-elements entirely. */
+  @supports not (scrollbar-width: thin) {
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    /* The transparent border, drawn inside the padding box, is what makes the thumb read
+           as thin. */
+    ::-webkit-scrollbar-thumb {
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-color: var(--scroll-thumb);
+      background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scroll-thumb-hover);
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    // The reading line: under everything sticky, with some air. Anchors land a section here and
+    // the section spy reads from here, so a section jumped to is the one being read.
+    scroll-padding-top: calc(
+      var(--status-banner-height, 0px) + var(--header-height, 4.5rem) + var(--band-height, 0px) +
+        2.5rem
+    );
+    // Scrollbar always reserved, so a view transition cannot shift the page sideways
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--surface-0);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+
+    // lpg-root is display: contents, so this column is what holds the footer down
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    // The status banner is fixed; this is the room it takes, or the sticky header covers the page
+    padding-block-start: var(--status-banner-height, 0px);
+  }
+
+  // Takes the slack; kept a block, since flex items refuse to go below min-content
+  .main {
+    flex: 1 0 auto;
+    // The same refusal, one level up: this is a flex item of the body now.
+    min-width: 0;
+  }
+
+  // The CV is its own document, so the site's heading rhythm must not reach into it
+  .cv :where(h1, h2, h3) {
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-wrap: wrap;
+  }
+
+  .main:has(.message-page) {
+    display: grid;
+    align-content: center;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  dl,
+  dd,
+  figure,
+  ul,
+  ol {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 650;
+    text-wrap: balance;
+  }
+
+  // Display sizes need to be set tighter than body headings.
+  h1 {
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  // Same as a button: a control to press, and one the custom cursor can take over.
+  summary {
+    cursor: pointer;
+  }
+
+  // Never removed, only restyled.
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background-color: var(--accent-solid);
+    color: var(--on-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer blocks {
+  // Zoom control shared by the CV and sitemap viewers.
+  .zoom {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+
+    &__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.9rem;
+      min-height: 1.9rem;
+      padding: 0.25rem 0.5rem;
+      border: 0;
+      border-radius: 999px;
+      background-color: transparent;
+      color: var(--ink-muted);
+      font-size: var(--step-0);
+      line-height: 1;
+      transition:
+        background-color 200ms var(--ease),
+        color 200ms var(--ease);
+
+      &:hover {
+        background-color: var(--surface-3);
+        color: var(--ink);
+      }
+
+      &--wide {
+        font-size: 0.75rem;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+    }
+
+    // Drawn, not typed: a glyph reads low and off-centre in a round button
+    &__icon {
+      width: 1.15em;
+      height: 1.15em;
+      fill: none;
+      stroke: currentcolor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    &__level {
+      min-width: 3.4rem;
+      color: var(--ink-faint);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  // The toggle shows the theme it switches to, as every OS does.
+  [data-theme='dark'] .theme-toggle__icon--moon,
+  [data-theme='light'] .theme-toggle__icon--sun {
+    display: none;
+  }
+
+  // Shared shape for the theme switch, menu button and view count, which live in components
+  // that cannot reach each other's styles.
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--ink-muted);
+    line-height: 1;
+    transition:
+      color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--ink);
+    }
+  }
+
+  // A hover-only label from one attribute, no runtime; the element keeps its own `title` and
+  // accessible name, so a reader who never hovers still knows what the control is.
+  .tip {
+    position: relative;
+
+    &::after {
+      content: attr(data-tip);
+      position: absolute;
+      z-index: 3;
+      top: calc(100% + var(--space-2));
+      left: 50%;
+      translate: -50% 0;
+      width: max-content;
+      max-width: 22ch;
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      background-color: var(--surface-1);
+      color: var(--ink);
+      font-size: var(--step--2);
+      font-weight: 450;
+      line-height: 1.35;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration) var(--ease);
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+      opacity: 1;
+    }
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 0.75rem 1.35rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease),
+      color var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &--primary {
+      background-color: var(--accent-solid);
+      color: var(--on-accent);
+
+      &:hover {
+        background-color: var(--accent-solid-hover);
+      }
+    }
+
+    &--ghost {
+      border-color: var(--line-strong);
+      color: var(--ink);
+
+      &:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+    }
+
+    &--block {
+      width: 100%;
+    }
+
+    &__icon {
+      width: 1.05rem;
+      height: 1.05rem;
+      fill: none;
+      stroke: currentcolor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    // Set before the weight, so a button wearing this class reads as a link, not a control.
+    font: inherit;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--accent);
+    font-weight: 550;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+
+    &:hover {
+      color: var(--accent-strong);
+      border-bottom-color: currentcolor;
+    }
+
+    &__icon {
+      width: 1rem;
+      height: 1rem;
+      fill: currentcolor;
+      flex: none;
+    }
+
+    // The shared icon is 1.15em and its own style outranks this layer; the font size it
+    // inherits is what brings it to the GitHub mark's 1rem, so the pills agree
+    lpg-icon {
+      font-size: calc(1rem / 1.15);
+    }
+
+    &--repo,
+    &--demo {
+      padding: 0.65rem 1.1rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--ink);
+
+      &:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+    }
+
+    &--note {
+      padding: 0.65rem 1.1rem;
+      border: 1px dashed var(--line-strong);
+      border-radius: 999px;
+      color: var(--ink-muted);
+      cursor: default;
+    }
+  }
+
+  .section {
+    padding-block: var(--space-9);
+
+    &__inner {
+      max-width: var(--shell);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    &__header {
+      max-width: 58ch;
+      margin-bottom: var(--space-8);
+    }
+
+    &__eyebrow {
+      margin-bottom: var(--space-3);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    &__title {
+      // Section rhythm, whatever level the heading carries
+      line-height: 1.15;
+      font-size: var(--step-3);
+      letter-spacing: -0.02em;
+    }
+
+    &__lede {
+      margin-top: var(--space-4);
+      color: var(--ink-muted);
+      font-size: var(--step-1);
+    }
+  }
+
+  // Slides are projected, so the carousel's own stylesheet cannot reach them
+  .carousel-slide {
+    flex: 0 0 auto;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  // Words are built at runtime by SplitTextDirective, so they cannot be scoped.
+  .split__word {
+    display: inline-block;
+    // The mask clips, so the box has to hold the descenders: a tight heading line box leaves
+    // about 0.1em below the baseline and a "y" wants 0.22em. The negative margin gives the
+    // room back to the layout, so only the glyphs see it.
+    overflow: hidden;
+    padding-bottom: 0.3em;
+    margin-bottom: -0.3em;
+    vertical-align: bottom;
+  }
+
+  .split__inner {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  // Keyed on the attribute and classes RevealDirective sets, in any component.
+  .is-reveal-armed {
+    // Its own delay, plus its place in a group RevealGroupDirective numbered.
+    --reveal-total: calc(
+      var(--reveal-delay, 0ms) + (var(--reveal-index, 0) * var(--reveal-step, 90ms))
+    );
+
+    opacity: 0;
+    transform: translateY(1.25rem);
+
+    &[data-reveal='fade'] {
+      transform: none;
+    }
+
+    &[data-reveal='scale'] {
+      transform: scale(0.94);
+    }
+
+    &[data-reveal='slide-left'] {
+      transform: translateX(-2.5rem);
+    }
+
+    &[data-reveal='slide-right'] {
+      transform: translateX(2.5rem);
+    }
+
+    // A wipe, not a fade; masked rather than clipped, or it never intersects and deadlocks
+    &[data-reveal='mask'] {
+      opacity: 1;
+      transform: none;
+      mask-image: linear-gradient(90deg, #000 0 60%, transparent 100%);
+      mask-repeat: no-repeat;
+      mask-size: 0% 100%;
+    }
+
+    &.is-revealed {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 620ms var(--ease) var(--reveal-total),
+        transform 620ms var(--ease) var(--reveal-total);
+    }
+
+    // Only the wipe carries a mask, so nothing else pays for one.
+    &[data-reveal='mask'].is-revealed {
+      mask-size: 300% 100%;
+      transition: mask-size 780ms cubic-bezier(0.19, 1, 0.22, 1) var(--reveal-total);
+    }
+
+    .split__inner {
+      transform: translateY(105%);
+    }
+
+    &.is-revealed .split__inner {
+      transform: none;
+      transition: transform 850ms cubic-bezier(0.19, 1, 0.22, 1) var(--delay, 0ms);
+    }
+  }
+
+  // Set on the document element by CursorComponent.
+  .has-cursor {
+    cursor: none;
+
+    a,
+    button,
+    summary {
+      cursor: none;
+    }
+  }
+
+  .has-modal body {
+    overflow: hidden;
+  }
+
+  // Hand the native pointer back while a pop-up or theme wipe would freeze the custom one
+  .has-cursor.has-modal,
+  .has-cursor.is-theme-wiping {
+    cursor: auto;
+
+    a,
+    button,
+    summary {
+      cursor: pointer;
+    }
+  }
+
+  // A card that tilts toward the pointer: the surface and the transform lpgTilt writes into.
+  // The background stays with each card, since they sit on different surfaces.
+  .tilt-card {
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+
+    // Written by lpgTilt; the fallbacks are the resting state.
+    transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+      translateY(var(--tilt-lift, 0px));
+    transition:
+      transform 400ms var(--ease),
+      border-color 400ms var(--ease),
+      box-shadow 400ms var(--ease);
+
+    &.is-tilting {
+      border-color: var(--line-strong);
+    }
+  }
+
+  // The legal pages share one shape: a measure-wide column of sections. Each page carries only
+  // the parts it uses, so the block lives here rather than in three component stylesheets.
+  // Privacy and terms: a centred title over the column it belongs to, not over the whole shell.
+  .legal-page {
+    padding-block: var(--space-9);
+
+    .page-header {
+      max-width: var(--measure);
+      margin-inline: auto;
+    }
+
+    .doc {
+      margin-top: var(--space-8);
+    }
+  }
+
+  .doc {
+    max-width: var(--measure);
+    margin-inline: auto;
+
+    &__lede {
+      color: var(--ink-muted);
+      font-size: var(--step-1);
+    }
+
+    &__section {
+      margin-top: var(--space-7);
+    }
+
+    &__heading {
+      font-size: var(--step-1);
+    }
+
+    &__subheading {
+      margin-top: var(--space-6);
+      font-size: var(--step-0, 1rem);
+    }
+
+    &__text {
+      margin-top: var(--space-4);
+      color: var(--ink-muted);
+    }
+
+    &__note {
+      margin-top: var(--space-4);
+      color: var(--ink-faint);
+      font-size: var(--step--1);
+    }
+
+    &__list {
+      margin-top: var(--space-4);
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    &__item {
+      position: relative;
+      padding-inline-start: var(--space-5);
+      color: var(--ink-muted);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        top: 0.65em;
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        background-color: var(--accent);
+      }
+    }
+  }
+}
+
+@layer utilities {
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  // `until-found` is exempt, or find-in-page could not open a disclosure.
+  [hidden]:not([hidden='until-found']) {
+    display: none !important;
+  }
+}
+
+@layer motion {
+  // The hook belongs to a directive, so it has no single owning component.
+  @media (prefers-reduced-motion: reduce) {
+    [data-magnetic] {
+      transform: none !important;
+    }
+  }
+
+  // The theme swap changes colours everywhere at once; an element with a colour transition
+  // (a link, a pill) would otherwise fade its own way in after the wipe had passed it.
+  .is-theme-wiping,
+  .is-theme-wiping *,
+  .is-theme-wiping *::before,
+  .is-theme-wiping *::after {
+    transition: none !important;
+  }
+
+  // Anchored on the toggle that caused it.
+  .is-theme-wiping::view-transition-old(root),
+  .is-theme-wiping::view-transition-new(root) {
+    mix-blend-mode: normal;
+  }
+
+  // Going light, the new theme opens out from the toggle over the old one.
+  .is-theme-wiping--to-light::view-transition-new(root) {
+    animation: theme-wipe-in 520ms var(--ease) forwards;
+  }
+
+  .is-theme-wiping--to-light::view-transition-old(root) {
+    animation: none;
+    z-index: -1;
+  }
+
+  // Going dark reverses it, so the old theme sits on top to be seen
+  // Held at its end state: without forwards the old snapshot springs back to full size
+  // for a frame before the browser removes it, flashing the theme just left.
+  .is-theme-wiping--to-dark::view-transition-old(root) {
+    animation: theme-wipe-out 520ms var(--ease) forwards;
+    z-index: 1;
+  }
+
+  .is-theme-wiping--to-dark::view-transition-new(root) {
+    animation: none;
+    z-index: 0;
+  }
+
+  // Route morphing is motion like any other, so it goes when motion is refused.
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+
+  // IconComponent draws its own shapes; pathLength="1" makes one length fit any of them
+  @media (prefers-reduced-motion: no-preference) {
+    .site-nav__link.is-current .icon__stroke {
+      animation: icon-draw 620ms var(--ease);
+    }
+  }
+
+  @keyframes theme-wipe-in {
+    from {
+      clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
+    }
+    to {
+      clip-path: circle(var(--vt-r, 100vmax) at var(--vt-x, 50%) var(--vt-y, 0));
+    }
+  }
+
+  @keyframes theme-wipe-out {
+    from {
+      clip-path: circle(var(--vt-r, 100vmax) at var(--vt-x, 50%) var(--vt-y, 0));
+    }
+    to {
+      clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
+    }
+  }
+
+  @keyframes icon-draw {
+    from {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+// Reaches into several components to strip the chrome off a printed page.
+@media print {
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .consent,
+  .status-banner,
+  .nav-toggle,
+  .theme-toggle,
+  .media__toggle,
+  .scroll-progress,
+  .cursor,
+  .grain,
+  .hero__backdrop {
+    display: none !important;
+  }
+
+  body {
+    padding-block-start: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .project {
+    break-inside: avoid;
+  }
+}
+
+// Unlayered on purpose: Material injects unlayered styles, which beat layered ones
+.cv-dialog {
+  width: min(96vw, 60rem);
+  height: min(92vh, 58rem);
+
+  .mat-mdc-dialog-surface {
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-1);
+    box-shadow: 0 40px 120px rgb(0 0 0 / 55%);
+  }
+
+  &__backdrop {
+    background-color: rgb(4 8 13 / 72%);
+    backdrop-filter: blur(6px);
+  }
+
+  // The diagrams are landscape, so they get the width a portrait CV page does not need
+  &--wide {
+    width: min(96vw, 90rem);
+  }
+}
+
+.modal {
+  &--dialog {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (width < 48rem) {
+  .cv-dialog {
+    width: 100vw;
+    height: 100dvh;
+
+    .mat-mdc-dialog-surface {
+      border: 0;
+      border-radius: 0;
+    }
+  }
+}

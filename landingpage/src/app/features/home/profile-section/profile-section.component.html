@@ -1,0 +1,91 @@
+<section class="section section--profile">
+  <span class="profile__backdrop" aria-hidden="true"><common-formula-field /></span>
+
+  <div class="section__inner">
+    <div class="profile" lpgReveal>
+      <p class="section__eyebrow" i18n="@@profile.eyebrow.label">About me</p>
+      <h1 class="section__title" i18n="@@profile.title">Engineer by trade, curious by default.</h1>
+
+      <!-- Photo on the left, with the quote rising from it as a thought bubble. -->
+      <div class="profile__stage">
+        <div class="profile__portrait">
+          <span class="profile__ring profile__ring--outer" aria-hidden="true"></span>
+          <span class="profile__ring profile__ring--inner" aria-hidden="true"></span>
+          <img
+            class="profile__photo"
+            src="assets/img/cv-photo.jpg"
+            width="300"
+            height="300"
+            decoding="async"
+            i18n-alt="@@profile.photo.alt"
+            alt="Christian-Ioan Szasz"
+          />
+        </div>
+
+        <div class="testimonial">
+          <svg
+            class="testimonial__cloud"
+            viewBox="0 0 240 150"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path [attr.d]="cloudPath" />
+          </svg>
+          <span class="testimonial__dot" aria-hidden="true"></span>
+          <p class="testimonial__quote" i18n="@@profile.text.1">
+            Software engineer in Sibiu, Romania. 4+ years building cloud accounting products for the
+            Nordic market, and a standing habit of rebuilding things myself to find out how they
+            actually work.
+          </p>
+        </div>
+      </div>
+
+      <p class="profile__text" i18n="@@profile.text.2">
+        My degrees are in computer science and electrical engineering, and the work I do for myself
+        sits where they meet: compilers, an 8086 emulator, the gap between a line of source and a
+        register changing value.
+      </p>
+
+      <p class="profile__hobbies-label" i18n="@@profile.hobbies.label">Away from the keyboard</p>
+      <ul class="profile__hobbies">
+        <li class="hobby">
+          <svg class="hobby__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path [attr.d]="glyphs.cyclingWheels" />
+            <path [attr.d]="glyphs.cyclingFrame" />
+          </svg>
+          <span i18n="@@profile.hobby.cycling.item">Cycling</span>
+        </li>
+        <li class="hobby">
+          <svg class="hobby__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path [attr.d]="glyphs.readingCover" />
+            <path [attr.d]="glyphs.readingSpine" />
+          </svg>
+          <span i18n="@@profile.hobby.reading.item">Reading</span>
+        </li>
+        <li class="hobby">
+          <svg class="hobby__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path [attr.d]="glyphs.padelFace" />
+            <path [attr.d]="glyphs.padelHandle" />
+            <path [attr.d]="glyphs.padelBall" />
+          </svg>
+          <span i18n="@@profile.hobby.padel.item">Padel</span>
+        </li>
+        <li class="hobby">
+          <svg class="hobby__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path [attr.d]="glyphs.travellingGlobe" />
+            <path [attr.d]="glyphs.travellingEquator" />
+            <path [attr.d]="glyphs.travellingMeridian" />
+          </svg>
+          <span i18n="@@profile.hobby.travelling.item">Travelling</span>
+        </li>
+        <li class="hobby">
+          <svg class="hobby__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path [attr.d]="glyphs.swimmingWaveTop" />
+            <path [attr.d]="glyphs.swimmingWaveBottom" />
+          </svg>
+          <span i18n="@@profile.hobby.swimming.item">Swimming</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

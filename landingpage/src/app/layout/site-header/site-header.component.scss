@@ -1,0 +1,390 @@
+.site-header {
+  position: sticky;
+  // Below the status banner when it shows, at the very top otherwise.
+  top: var(--status-banner-height, 0px);
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  background-color: transparent;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+
+  &--scrolled {
+    border-bottom-color: var(--line);
+    background-color: var(--scrim);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding: var(--space-4) var(--gutter);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-start: auto;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--ink);
+  text-decoration: none;
+
+  &__mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0.2rem;
+    border-radius: 9px;
+    background-color: var(--accent-solid);
+    color: var(--on-accent);
+
+    // The tap reads as a highlight against the solid accent tile.
+    --brand-tap: #fff;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  &__name {
+    font-size: var(--step--1);
+    font-weight: 640;
+  }
+
+  &__role {
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  // The two captions share one cell, so the reveal costs no layout
+  &__status {
+    display: grid;
+    justify-items: start;
+  }
+
+  &__status-face {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    white-space: nowrap;
+    transition:
+      opacity 340ms var(--ease),
+      transform 340ms var(--ease);
+
+    &--here {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &--remote {
+      opacity: 0;
+      transform: translateY(0.5em);
+      color: var(--ink-muted);
+    }
+  }
+
+  &__wifi {
+    width: 0.85em;
+    height: 0.85em;
+    overflow: visible;
+    fill: none;
+    stroke: #35c47a;
+    stroke-width: 2;
+    stroke-linecap: round;
+
+    &-dot {
+      fill: #35c47a;
+      stroke: none;
+    }
+  }
+
+  // Hovering or focusing the whole logo rolls the caption to availability
+  &:hover,
+  &:focus-visible {
+    .brand__status-face--here {
+      opacity: 0;
+      transform: translateY(-0.5em);
+    }
+
+    .brand__status-face--remote {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .brand__wifi-arc {
+      transform-origin: 12px 18px;
+      animation: brand-wifi 1.6s var(--ease) infinite;
+
+      &--far {
+        animation-delay: 240ms;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & &__status-face {
+      transition: none;
+    }
+
+    &:hover #{&}__wifi-arc,
+    &:focus-visible #{&}__wifi-arc {
+      animation: none;
+    }
+  }
+}
+
+// A broadcast shimmer across the wifi arcs while the logo is hovered
+@keyframes brand-wifi {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.site-nav {
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: 999px;
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    font-weight: 550;
+    text-decoration: none;
+    transition:
+      color var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
+  }
+
+  // The mark sits back until the item is wanted, then leans in and takes the accent.
+  &__icon {
+    display: inline-flex;
+    color: var(--ink-faint);
+    transition:
+      color var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+  }
+
+  &__link:hover &__icon {
+    color: var(--accent);
+    transform: translateY(-2px) scale(1.1);
+  }
+
+  &__link.is-current &__icon {
+    color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__link:hover &__icon {
+      transform: none;
+    }
+  }
+
+  &__link:hover,
+  &__link.is-current {
+    background-color: var(--surface-2);
+    color: var(--ink);
+  }
+
+  &__link--cta {
+    margin-inline-start: var(--space-2);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background-color: transparent;
+    }
+  }
+}
+
+// The pill itself is a shared block in styles.scss, because the view count wears it too and
+// lives in a component this stylesheet cannot reach into.
+.theme-toggle {
+  &__icon {
+    // Or flex shrinks the glyph away and the button paints empty
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+
+    &--moon {
+      fill: currentcolor;
+      stroke: none;
+    }
+  }
+}
+
+.nav-toggle {
+  display: none;
+  // The bars are the only content, and two of the three are positioned, so without a floor the
+  // button collapses to the height of one 2px line and stops being a target worth aiming at.
+  min-block-size: 2.25rem;
+  color: var(--ink);
+  font-size: var(--step--1);
+  font-weight: 550;
+
+  &__bars {
+    flex: none;
+    position: relative;
+    display: block;
+    width: 1rem;
+    height: 2px;
+    border-radius: 2px;
+    background-color: currentcolor;
+    transition: background-color var(--duration) var(--ease);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      height: 2px;
+      border-radius: 2px;
+      background-color: currentcolor;
+      transition: transform var(--duration) var(--ease);
+    }
+
+    &::before {
+      top: -5px;
+    }
+
+    &::after {
+      top: 5px;
+    }
+  }
+
+  &[aria-expanded='true'] &__bars {
+    background-color: transparent;
+
+    &::before {
+      transform: translateY(5px) rotate(45deg);
+    }
+
+    &::after {
+      transform: translateY(-5px) rotate(-45deg);
+    }
+  }
+}
+
+@media (width < 56rem) {
+  /* The count is the first to go: below this width the brand, switch, language and menu
+       button already fill the line, and a fifth control pushed the menu off the edge. Still
+       shown in the hero. */
+  lpg-view-counter {
+    display: none;
+  }
+
+  .site-header {
+    &__inner {
+      gap: var(--space-3);
+      position: relative;
+    }
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+
+    // Hidden accessibly: the bars carry it, the word overflows the row
+    &__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+
+  .site-nav {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    display: none;
+    padding: var(--space-3) var(--gutter) var(--space-5);
+    border-bottom: 1px solid var(--line);
+    background-color: var(--surface-1);
+    box-shadow: var(--shadow-card);
+
+    &.is-open {
+      display: block;
+    }
+  }
+
+  .site-nav {
+    &__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-1);
+    }
+
+    &__link {
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--step-0);
+
+      &--cta {
+        margin-inline-start: 0;
+        margin-top: var(--space-2);
+        text-align: center;
+      }
+    }
+  }
+
+  .brand {
+    &__role {
+      display: none;
+    }
+  }
+}
+
+// Under 360px the name gets 57px and breaks over three lines; the mark carries it
+@media (width < 22.5rem) {
+  .brand {
+    &__text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+}

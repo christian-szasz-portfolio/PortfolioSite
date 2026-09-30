@@ -1,0 +1,68 @@
+.status-banner {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 70;
+  max-height: 0;
+  overflow: hidden;
+  background-color: var(--info-surface);
+  color: var(--info-ink);
+  font-size: var(--step--1);
+  // One animated property, not two: the row below holds the padding, so opening the bar no
+  // longer reflows its own contents on every frame. The height itself has to animate, since the
+  // header sits below the bar and follows the measurement this element publishes.
+  transition: max-height var(--duration) var(--ease);
+
+  &--visible {
+    // Room for three lines on a phone; the transition only needs a ceiling, not the height.
+    max-height: 8rem;
+    border-block-end: 1px solid var(--line-strong);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5);
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex: none;
+
+    svg {
+      width: 1.1em;
+      height: 1.1em;
+    }
+  }
+
+  &__text {
+    max-width: 80ch;
+    margin: 0;
+  }
+
+  &__more {
+    margin-inline-start: var(--space-2);
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  &__close {
+    flex: none;
+    margin-inline-start: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: inherit;
+    font-size: 0.9em;
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgb(0 0 0 / 8%);
+    }
+  }
+}

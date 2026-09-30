@@ -1,0 +1,7 @@
+@if (stats(); as s) {
+  <span class="views pill tip" [attr.title]="tip" [attr.aria-label]="tip" [attr.data-tip]="tip">
+    <span class="views__eye" aria-hidden="true"><lpg-icon name="views" /></span>
+    <span class="views__rule" aria-hidden="true"></span>
+    <span class="views__value">{{ s.total }}</span>
+  </span>
+}

@@ -1,0 +1,92 @@
+<lpg-modal-shell
+  i18n-heading="@@cv.modal.title"
+  heading="Curriculum vitae"
+  headingId="cv-modal-title"
+  i18n-closeLabel="@@cv.modal.close.cta"
+  closeLabel="Close the CV"
+  (closed)="close()"
+>
+  <lpg-zoom-controls
+    modal-tools
+    [level]="zoom()"
+    (zoomOut)="nudge(-1)"
+    (zoomIn)="nudge(1)"
+    (fit)="fit()"
+  />
+
+  <div class="download" modal-tools lpgMenu #menu="lpgMenu">
+    <button class="download__trigger" lpgMenuTrigger>
+      <ng-container i18n="@@cv.download.cta">Download</ng-container>
+      <span class="download__caret" aria-hidden="true"></span>
+    </button>
+
+    @if (menu.open()) {
+      <div
+        class="download__menu"
+        role="menu"
+        i18n-aria-label="@@cv.download.menu.label"
+        aria-label="Download the CV"
+      >
+        <button
+          class="download__item"
+          type="button"
+          lpgMenuItem
+          [attr.aria-busy]="printing()"
+          (click)="downloadPdf()"
+        >
+          <ng-container i18n="@@cv.asPdf.cta">As PDF</ng-container>
+          <span class="download__note">
+            @if (printFailed()) {
+              <ng-container i18n="@@cv.pdf.failed.text"
+                >Could not be rendered, please try again</ng-container
+              >
+            } @else if (printing()) {
+              <ng-container i18n="@@cv.pdf.working.text">Rendering&hellip;</ng-container>
+            } @else {
+              <ng-container i18n="@@cv.pdf.note.text">A single A4 page</ng-container>
+            }
+          </span>
+        </button>
+
+        <button
+          class="download__item"
+          type="button"
+          lpgMenuItem
+          [attr.aria-busy]="packing()"
+          (click)="downloadSource()"
+        >
+          <ng-container i18n="@@cv.source.cta">Whole source</ng-container>
+          <span class="download__note">
+            @if (packFailed()) {
+              <ng-container i18n="@@cv.zip.failed.text"
+                >Could not be packed, please try again</ng-container
+              >
+            } @else if (packing()) {
+              <ng-container i18n="@@cv.zip.working.text">Packing&hellip;</ng-container>
+            } @else {
+              <ng-container i18n="@@cv.zip.note.text"
+                >HTML, stylesheet and photograph, zipped</ng-container
+              >
+            }
+          </span>
+        </button>
+      </div>
+    }
+  </div>
+
+  <a class="modal__external" modal-tools routerLink="/cv" target="_blank" rel="noopener">
+    <ng-container i18n="@@cv.openTab.cta">Open in a tab</ng-container>
+  </a>
+
+  <div class="modal__viewport" #viewport tabindex="0" (wheel)="zoomInput.onWheel($event)">
+    <div class="modal__stage" [style.width]="stageWidth()" [style.height]="stageHeight()">
+      <div class="modal__sheet" #sheet [style.transform]="sheetTransform()">
+        <lpg-cv-document />
+      </div>
+    </div>
+  </div>
+
+  <ng-container modal-hint i18n="@@cv.hint.text">
+    Scroll to pan &middot; Ctrl and scroll to zoom &middot; Esc to close
+  </ng-container>
+</lpg-modal-shell>

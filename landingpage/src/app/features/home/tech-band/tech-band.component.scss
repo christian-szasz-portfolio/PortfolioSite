@@ -1,0 +1,13 @@
+.marquee-band {
+  // Stacks under the header, whose own top shifts down while the status banner shows.
+  position: sticky;
+  top: calc(var(--status-banner-height, 0px) + var(--header-height, 0px));
+  // Under the header, over the page.
+  z-index: 40;
+  display: grid;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-block: 1px solid var(--line);
+  background-color: var(--surface-1);
+  overflow: hidden;
+}

@@ -1,0 +1,96 @@
+@let document = cv();
+
+<aside class="cv__sidebar">
+  <header class="cv-profile">
+    <img
+      class="cv-profile__photo"
+      [src]="document.profile.photo"
+      [alt]="document.profile.photoAlt"
+      width="163"
+      height="163"
+    />
+    <h1 class="cv-profile__name">{{ document.profile.name }}</h1>
+
+    <p class="cv-profile__title">
+      @for (line of document.profile.title; track line) {
+        {{ line }}
+        @if (!$last) {
+          <br />
+        }
+      }
+    </p>
+
+    <p class="cv-profile__subtitle">{{ document.profile.subtitle }}</p>
+  </header>
+
+  <section class="cv-panel cv-panel--contact">
+    <h2 class="cv-panel__heading" i18n="@@cv.contact.title">Contact</h2>
+    <div class="cv-panel__body">
+      <ul class="cv-contact">
+        @for (line of document.contact; track line.text) {
+          <li class="cv-contact__item">
+            <svg
+              class="cv-contact__icon"
+              viewBox="0 0 24 24"
+              role="img"
+              [attr.aria-label]="line.label"
+            >
+              <path [attr.d]="glyph(line.icon)" />
+            </svg>
+            <span class="cv-contact__text">{{ line.text }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="cv-panel cv-panel--skills">
+    <h2 class="cv-panel__heading" i18n="@@cv.skills.title">Skills</h2>
+    <div class="cv-panel__body">
+      <ul class="cv-skills">
+        @for (skill of document.skills; track skill.name) {
+          <li class="cv-skills__row">
+            <span class="cv-skills__name">{{ skill.name }}</span>
+            <span class="cv-skills__years">{{ skill.measure }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="cv-panel cv-panel--education">
+    <h2 class="cv-panel__heading" i18n="@@cv.education.title">Education</h2>
+    <div class="cv-panel__body">
+      <ul class="cv-education">
+        @for (study of document.education; track study.meta) {
+          <li class="cv-education__item">
+            <p class="cv-education__school">{{ study.school }}</p>
+            <p class="cv-education__degree">
+              @for (line of study.degree; track line) {
+                {{ line }}
+                @if (!$last) {
+                  <br />
+                }
+              }
+            </p>
+            <p class="cv-education__meta">{{ study.meta }}</p>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="cv-panel cv-panel--languages">
+    <h2 class="cv-panel__heading" i18n="@@cv.languages.title">Languages</h2>
+    <div class="cv-panel__body">
+      <ul class="cv-skills">
+        @for (language of document.languages; track language.name) {
+          <li class="cv-skills__row">
+            <span class="cv-skills__name">{{ language.name }}</span>
+            <span class="cv-skills__years">{{ language.measure }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+</aside>

@@ -1,0 +1,89 @@
+.crumbs {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--step--1);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__link {
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color var(--duration) var(--ease);
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+
+  &__divider {
+    display: inline-flex;
+    color: var(--ink-faint);
+    transition: color var(--duration) var(--ease);
+  }
+
+  &__chevron {
+    width: 0.85em;
+    height: 0.85em;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--duration) var(--ease);
+  }
+
+  // The mark leans toward the page its link leads to
+  &__link:hover + &__divider,
+  &__link:focus-visible + &__divider {
+    color: var(--accent);
+  }
+
+  &__link:hover + &__divider &__chevron,
+  &__link:focus-visible + &__divider &__chevron {
+    transform: translateX(3px);
+  }
+
+  // The last one keeps nudging at the page you are on
+  &__item:nth-last-child(2) &__chevron {
+    animation: crumb-nudge 2.6s var(--ease) infinite;
+  }
+
+  &__current {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+@keyframes crumb-nudge {
+  0%,
+  62%,
+  100% {
+    transform: translateX(0);
+  }
+
+  78% {
+    transform: translateX(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crumbs {
+    &__chevron {
+      transition: none;
+      animation: none;
+    }
+
+    &__link:hover + &__divider &__chevron,
+    &__link:focus-visible + &__divider &__chevron {
+      transform: none;
+    }
+  }
+}

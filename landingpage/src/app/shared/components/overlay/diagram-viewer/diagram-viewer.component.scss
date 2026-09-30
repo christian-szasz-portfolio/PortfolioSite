@@ -1,0 +1,37 @@
+// The body row of the shell: the drawing, scrollable once it is larger than the row.
+.diagram {
+  // `safe` keeps the overflow scrollable; plain centring hides the start edge
+  position: relative;
+  display: grid;
+  place-content: safe center;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-4);
+  background-color: var(--surface-0);
+  overscroll-behavior: contain;
+  cursor: grab;
+  user-select: none;
+
+  &.is-dragging {
+    cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  // Carries the zoomed size, so the scrollbars know how far to go
+  &__stage {
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background-color: var(--surface-2);
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}

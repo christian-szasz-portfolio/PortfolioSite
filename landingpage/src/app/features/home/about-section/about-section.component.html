@@ -1,0 +1,28 @@
+<section class="section section--about" id="about" lpgSectionSpy="about">
+  <div class="section__inner">
+    <div class="about" lpgReveal>
+      <div class="about__body" [lpgDrift]="depths.Soft">
+        <p class="section__eyebrow" i18n="@@about.eyebrow.label">About</p>
+        <h2 class="section__title" lpgSplitText>Christian-Ioan Szasz</h2>
+
+        <p class="about__text" i18n="@@about.text.1">
+          For 4+ years I have built cloud accounting SaaS for the Nordic market: four .NET and
+          Angular microservices talking over Azure Service Bus with Rebus sagas and CQRS, each with
+          its own multi-tenant SQL Server.
+        </p>
+        <p class="about__text" i18n="@@about.text.2">
+          Lately: moving a .NET Framework 4.8 monolith to .NET 8 piece by piece and its Knockout.js
+          frontend to React 19, every step behind a feature flag.
+        </p>
+        <p class="about__text" i18n="@@about.text.3">
+          I grew up between two languages and now work in three. I like real constraints, code
+          someone can still read in a year, and finding out early when I am wrong.
+        </p>
+
+        <lpg-contact-list [rows]="contact" />
+      </div>
+
+      <lpg-cv-card />
+    </div>
+  </div>
+</section>

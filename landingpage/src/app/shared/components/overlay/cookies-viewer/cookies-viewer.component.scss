@@ -1,0 +1,7 @@
+.cookies-modal {
+  // min-height: 0 lets this grid child scroll instead of stretching the modal
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-6) var(--space-7);
+}

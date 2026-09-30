@@ -1,0 +1,10 @@
+<button
+  class="play-toggle"
+  [class.play-toggle--tool]="variant() === variants.Tool"
+  type="button"
+  [attr.aria-pressed]="playing()"
+  (click)="toggled.emit()"
+>
+  <span class="play-toggle__icon" aria-hidden="true"></span>
+  <span class="play-toggle__text">{{ playing() ? pauseLabel : playLabel }}</span>
+</button>

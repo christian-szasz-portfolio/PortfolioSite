@@ -1,0 +1,59 @@
+<lpg-modal-shell
+  i18n-heading="@@sitemap.title"
+  heading="Sitemap"
+  headingId="sitemap-modal-title"
+  i18n-closeLabel="@@sitemap.close.cta"
+  closeLabel="Close the sitemap"
+  (closed)="close()"
+>
+  <lpg-zoom-controls
+    modal-tools
+    [level]="zoom()"
+    (zoomOut)="nudge(-1)"
+    (zoomIn)="nudge(1)"
+    (fit)="fit()"
+  />
+
+  <div class="sitemap" #viewport tabindex="0" (wheel)="zoomInput.onWheel($event)">
+    <div class="sitemap__stage" [style.width.px]="stageWidth()" [style.height.px]="stageHeight()">
+      <div
+        class="sitemap__canvas"
+        [style.width.px]="width()"
+        [style.height.px]="height()"
+        [style.transform]="canvasTransform()"
+      >
+        <svg
+          class="sitemap__wires"
+          [attr.viewBox]="'0 0 ' + width() + ' ' + height()"
+          [attr.width]="width()"
+          [attr.height]="height()"
+          aria-hidden="true"
+        >
+          @for (wire of connectors(); track $index) {
+            <path class="sitemap__wire" [attr.d]="wire" />
+          }
+        </svg>
+
+        @for (node of placed(); track node.label) {
+          <a
+            class="sitemap__node"
+            [class.sitemap__node--root]="node.depth === 0"
+            [style.left.px]="node.left"
+            [style.top.px]="node.top"
+            [style.width.px]="nodeWidth"
+            [style.height.px]="nodeHeight"
+            [routerLink]="node.route"
+            [fragment]="node.fragment"
+            (click)="close()"
+          >
+            {{ node.label }}
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <ng-container modal-hint i18n="@@sitemap.hint.text">
+    Every page on this site &middot; Ctrl and scroll to zoom &middot; Esc to close
+  </ng-container>
+</lpg-modal-shell>

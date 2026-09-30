@@ -1,0 +1,31 @@
+@let document = cv();
+
+<div class="cv__main">
+  <section class="cv-section cv-section--about">
+    <h2 class="cv-section__heading" i18n="@@cv.about.title">About Me</h2>
+
+    <div class="cv-about">
+      @for (paragraph of document.about; track $index) {
+        <p class="cv-about__paragraph">
+          @for (run of paragraph; track $index) {
+            @if (run.strong) {
+              <strong class="cv-about__highlight">{{ run.text }}</strong>
+            } @else {
+              {{ run.text }}
+            }
+          }
+        </p>
+      }
+    </div>
+  </section>
+
+  <section class="cv-section cv-section--experience">
+    <h2 class="cv-section__heading" i18n="@@cv.experience.title">Most Relevant Work Experience</h2>
+
+    @for (role of document.roles; track role.project) {
+      <lpg-cv-role [role]="role" />
+    }
+  </section>
+
+  <p class="cv-page-number">{{ document.pageNumber }}</p>
+</div>

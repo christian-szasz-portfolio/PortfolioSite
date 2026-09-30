@@ -1,0 +1,6 @@
+.angular
+dist
+e2e-results
+node_modules
+public
+package-lock.json

@@ -1,0 +1,54 @@
+.contact {
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--line);
+
+  &__item {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: var(--space-4);
+    // Centred, not on the baseline: the label is uppercase at 0.75rem and the value is
+    // larger, so sharing a baseline left the left column sitting visibly high.
+    align-items: center;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--line);
+
+    @media (width < 48rem) {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+
+  &__key {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // Sized down from the label beside it, which is smaller than body text.
+  &__icon {
+    display: inline-flex;
+    color: var(--accent);
+    font-size: 0.95rem;
+  }
+
+  // One language and its flag, kept together when the row wraps.
+  &__part {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+  }
+}

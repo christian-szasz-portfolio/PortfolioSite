@@ -1,0 +1,26 @@
+<div>
+  <div class="bar__line">
+    <h1 class="bar__title">Analytics</h1>
+
+    @if (source(); as name) {
+      <span class="bar__source" [class.bar__source--live]="live()">
+        {{ live() ? 'live' : 'local' }} · {{ name }}
+      </span>
+    }
+  </div>
+
+  <p class="bar__where">{{ archiveLocation() ?? 'reading the archive…' }}</p>
+</div>
+
+<div class="bar__actions">
+  @if (report(); as done) {
+    <span class="bar__note">
+      {{ done.daysArchived }} day{{ done.daysArchived === 1 ? '' : 's' }} archived,
+      {{ done.from }} to {{ done.to }}
+    </span>
+  }
+
+  <button class="button" type="button" [disabled]="busy()" (click)="sync.emit()">
+    {{ busy() ? 'Working…' : 'Sync from Azure' }}
+  </button>
+</div>

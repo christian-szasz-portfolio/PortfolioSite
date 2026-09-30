@@ -1,0 +1,99 @@
+<header class="site-header" #shell [class.site-header--scrolled]="scrolled()">
+  <div class="site-header__inner">
+    <a class="brand" routerLink="/" fragment="top" lpgMagnetic>
+      <span class="brand__mark"><common-brand-mark /></span>
+      <span class="brand__text">
+        <span class="brand__name">Christian-Ioan Szasz</span>
+        <span class="brand__role">
+          <span class="brand__status">
+            <span class="brand__status-face brand__status-face--here" i18n="@@brand.place.text"
+              >Sibiu, Romania</span
+            >
+            <span class="brand__status-face brand__status-face--remote">
+              <svg class="brand__wifi" viewBox="0 0 24 24" aria-hidden="true">
+                <path class="brand__wifi-arc brand__wifi-arc--far" [attr.d]="wifiGlyphs.arcFar" />
+                <path class="brand__wifi-arc brand__wifi-arc--near" [attr.d]="wifiGlyphs.arcNear" />
+                <path class="brand__wifi-dot" [attr.d]="wifiGlyphs.dot" />
+              </svg>
+              <ng-container i18n="@@status.remote.text">open to remote work</ng-container>
+            </span>
+          </span>
+        </span>
+      </span>
+    </a>
+
+    <nav
+      class="site-nav"
+      id="site-nav"
+      [class.is-open]="menuOpen()"
+      i18n-aria-label="@@nav.label"
+      aria-label="Sections"
+    >
+      <ul class="site-nav__list">
+        @for (item of nav; track item.fragment; let index = $index) {
+          <li class="site-nav__item" [style.--nav-index]="index">
+            <a
+              class="site-nav__link"
+              routerLink="/"
+              [fragment]="item.fragment"
+              [class.is-current]="active() === item.fragment"
+              (click)="closeMenu()"
+            >
+              <span class="site-nav__icon"><lpg-icon [name]="item.icon" /></span>
+              <span class="site-nav__label">{{ item.label }}</span>
+            </a>
+          </li>
+        }
+        <li class="site-nav__item" [style.--nav-index]="nav.length">
+          <a class="site-nav__link site-nav__link--cta" [href]="cvHref" (click)="openCv($event)">
+            <span class="site-nav__icon"><lpg-icon name="cv" /></span>
+            <span class="site-nav__label">CV</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="site-header__controls">
+      <lpg-view-counter />
+
+      <button
+        class="theme-toggle pill tip"
+        type="button"
+        [attr.aria-pressed]="theme.isDark()"
+        [attr.aria-label]="theme.toggleLabel()"
+        [attr.title]="theme.toggleLabel()"
+        [attr.data-tip]="theme.toggleLabel()"
+        (click)="onToggleTheme($event)"
+      >
+        <svg
+          class="theme-toggle__icon theme-toggle__icon--moon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path [attr.d]="themeGlyphs.moon" />
+        </svg>
+        <svg
+          class="theme-toggle__icon theme-toggle__icon--sun"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path [attr.d]="themeGlyphs.sunDisc" />
+          <path [attr.d]="themeGlyphs.sunRays" />
+        </svg>
+      </button>
+
+      <lpg-language-switcher />
+
+      <button
+        class="nav-toggle pill"
+        type="button"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="site-nav"
+        (click)="toggleMenu()"
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+        <span class="nav-toggle__label" i18n="@@nav.menu.label">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>

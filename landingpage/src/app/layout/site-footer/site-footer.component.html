@@ -1,0 +1,58 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__note" i18n="@@footer.note.text">
+      Made with
+      <span
+        class="site-footer__tech"
+        i18n-aria-label="@@footer.tech.label"
+        aria-label="Angular, TypeScript, SCSS and RxJS"
+        ><lpg-tech-icon class="tip" data-tip="Angular" name="Angular" /><lpg-tech-icon
+          class="tip"
+          data-tip="TypeScript"
+          name="TypeScript" /><lpg-tech-icon
+          class="tip"
+          data-tip="SCSS"
+          name="SCSS" /><lpg-tech-icon class="tip" data-tip="RxJS" name="RxJS"
+      /></span>
+    </p>
+    <p class="site-footer__meta">
+      <!-- No year: hand-typed is wrong every January, computed mismatches prerendered and
+           hydrating client on the day it changes. -->
+      <span
+        >Copyright &copy; Christian-Ioan Szasz.
+        <ng-container i18n="@@footer.rights.text">All rights reserved.</ng-container></span
+      >
+      <span class="site-footer__links">
+        <a
+          class="link site-footer__link"
+          routerLink="/"
+          fragment="top"
+          (click)="openSitemap($event)"
+        >
+          <span class="site-footer__icon"><lpg-icon name="sitemap" /></span>
+          <span i18n="@@footer.sitemap.cta">Sitemap</span>
+        </a>
+        <button type="button" class="link site-footer__link" (click)="openCookies()">
+          <span class="site-footer__icon"><lpg-icon name="cookies" /></span>
+          <span i18n="@@footer.cookies.cta">Cookies</span>
+        </button>
+        <a class="link site-footer__link" routerLink="/privacy">
+          <span class="site-footer__icon"><lpg-icon name="privacy" /></span>
+          <span i18n="@@footer.privacy.cta">Privacy</span>
+        </a>
+        <a class="link site-footer__link" routerLink="/terms">
+          <span class="site-footer__icon"><lpg-icon name="terms" /></span>
+          <span i18n="@@footer.terms.cta">Terms</span>
+        </a>
+        <a
+          class="link site-footer__link site-footer__link--top"
+          [href]="topHref()"
+          (click)="scrollToTop($event)"
+        >
+          <span class="site-footer__icon"><lpg-icon name="top" /></span>
+          <span i18n="@@footer.top.cta">Back to top</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</footer>

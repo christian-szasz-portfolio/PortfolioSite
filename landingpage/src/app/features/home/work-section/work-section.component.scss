@@ -1,0 +1,20 @@
+/* The section frame is shared and lives in the global stylesheet */
+
+.section {
+  &--work {
+    display: block;
+    // The stats strip above closes the hero, so less air is needed here
+    padding-top: var(--space-8);
+  }
+}
+
+.work {
+  // One project fills the track; the next peeks in to say the carousel moves.
+  &__slide {
+    width: min(100%, 76rem);
+
+    @media (width >= 62rem) {
+      width: min(92%, 70rem);
+    }
+  }
+}

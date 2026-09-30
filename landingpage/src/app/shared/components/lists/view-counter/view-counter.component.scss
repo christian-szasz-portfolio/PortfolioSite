@@ -1,0 +1,23 @@
+.views {
+  font-size: var(--step--1);
+
+  // The same 1.05rem the theme switch draws its glyph at, so the two pills beside each other
+  // are the same height rather than four pixels apart.
+  &__eye {
+    display: inline-flex;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  // The rule he asked for as a "|", drawn rather than typed: a pipe character inherits the
+  // font's weight and sits off the optical centre.
+  &__rule {
+    width: 1px;
+    height: 1.05rem;
+    background-color: var(--line-strong);
+  }
+
+  &__value {
+    font-variant-numeric: tabular-nums;
+  }
+}
