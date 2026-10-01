@@ -9,6 +9,9 @@ export const siteUrl: string = site.url;
 /** The counter API's own origin, which a built site calls across origins. */
 export const apiUrl: string = site.api;
 
+/** The live demos, which every visit wakes and the CSP allows to be called. */
+export const demoUrls: readonly string[] = site.demos;
+
 /** Who the site is about, as schema.org, written into every page by SeoService. */
 export const person = {
   '@type': 'Person',

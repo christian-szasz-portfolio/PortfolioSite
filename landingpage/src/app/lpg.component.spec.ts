@@ -5,9 +5,11 @@ import { AnalyticsService, BrowserEnvironment, PointerPosition, PointerService, 
 
 import { LpgComponent } from './lpg.component';
 import { ActiveSectionService } from './core/services/site/active-section/active-section.service';
+import { WakeService } from './core/services/site/wake/wake.service';
 
 describe('LpgComponent', () => {
   let fixture: ComponentFixture<LpgComponent>;
+  let wakes = 0;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,11 +35,19 @@ describe('LpgComponent', () => {
           provide: PointerService,
           useValue: { position: signal<PointerPosition>({ x: 0, y: 0, active: false }) },
         },
+        { provide: WakeService, useValue: { wakeAll: () => wakes++ } },
       ],
     }).compileComponents();
 
+    wakes = 0;
     fixture = TestBed.createComponent(LpgComponent);
     fixture.detectChanges();
+  });
+
+  it('wakes the backends once on landing, whichever page it is', async () => {
+    await fixture.whenStable();
+
+    expect(wakes).toBe(1);
   });
 
   it('offers a skip link before anything else on the page', () => {

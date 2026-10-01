@@ -1,4 +1,5 @@
 {
   "url": "https://christianszasz.dev",
-  "api": "https://api.christianszasz.dev"
+  "api": "https://api.christianszasz.dev",
+  "demos": ["https://stack86.christianszasz.dev", "https://taskly.christianszasz.dev"]
 }

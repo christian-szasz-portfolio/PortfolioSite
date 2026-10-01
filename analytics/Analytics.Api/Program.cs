@@ -33,10 +33,12 @@ WebApplication app = builder.Build();
 // CORS wraps the limiter, so a 429 is still readable by an allowed origin.
 app.UseMiddleware<SecurityHeadersMiddleware>();
 
+// CORS wraps the probes too, so the site can wake the API on landing and read the answer.
+app.UseMiddleware<CorsMiddleware>();
+
 // Before the limiter, so the platform's probe cannot spend a caller's allowance or be refused.
 app.UseMiddleware<HealthMiddleware>();
 
-app.UseMiddleware<CorsMiddleware>();
 app.UseMiddleware<RateLimitingMiddleware>();
 
 // Emit idiomatic camelCase JSON ({ total, countries: [{ code, count }] }).

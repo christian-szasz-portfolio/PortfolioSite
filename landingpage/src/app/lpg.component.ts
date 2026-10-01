@@ -9,6 +9,7 @@ import { filter, map } from 'rxjs';
 import { interaction } from './data/interaction.data';
 import { ActiveSectionService } from './core/services/site/active-section/active-section.service';
 import { CurrentPathService } from './core/services/platform/current-path/current-path.service';
+import { WakeService } from './core/services/site/wake/wake.service';
 import { SiteFooterComponent } from './layout/site-footer/site-footer.component';
 import { SiteHeaderComponent } from './layout/site-header/site-header.component';
 import { ConsentBannerComponent } from './shared/components/overlay/consent-banner/consent-banner.component';
@@ -42,6 +43,7 @@ export class LpgComponent {
   private readonly scroller = inject(ViewportScroller);
   private readonly environment = inject(BrowserEnvironment);
   private readonly analytics = inject(AnalyticsService);
+  private readonly wake = inject(WakeService);
 
   /** Which section is being read, from the spies on the sections themselves */
   private readonly sections = inject(ActiveSectionService);
@@ -118,6 +120,9 @@ export class LpgComponent {
       // Angular's anchor scroll ignores `scroll-margin-top`, so it is given the line the section
       // spy reads from: a section scrolled to is then the section being read
       this.scroller.setOffset(() => [0, this.sections.readingLine()]);
+
+      // After the first paint, so the wake never competes with the page itself
+      this.wake.wakeAll();
     });
   }
 }

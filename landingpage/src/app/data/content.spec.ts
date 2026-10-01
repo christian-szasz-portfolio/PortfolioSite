@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
+import site from '../../site.config.json';
 import { ArticleBlock, projectPages, ProjectCatalog, projects } from './index';
 
 const PUBLIC_DIR = join(process.cwd(), 'public');
@@ -39,6 +40,17 @@ describe('content data', () => {
     }
     for (const page of projectPages) {
       expect(ProjectCatalog.projectBySlug(page.slug)).not.toBeNull();
+    }
+  });
+
+  // The CSP is built from site.config's list, so a demo missing from it is a wake the CSP refuses
+  it('lists every linked demo in site.config, where the CSP allows waking it', () => {
+    const allowed = site.demos.map((demo) => new URL(demo).origin);
+
+    for (const project of projects) {
+      if (project.demo) {
+        expect(allowed).toContain(new URL(project.demo).origin);
+      }
     }
   });
 
