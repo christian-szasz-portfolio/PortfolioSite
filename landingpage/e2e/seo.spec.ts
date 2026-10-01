@@ -4,6 +4,14 @@ import { expect, open, test } from './support/fixtures';
 /** The og:locale each language declares */
 const OG_LOCALE: Readonly<Record<string, string>> = { 'en-GB': 'en_GB', de: 'de_DE', ro: 'ro_RO' };
 
+/** The case studies with a share card of their own; every other page uses the site's */
+const SHARE_CARD: Readonly<Record<string, string>> = {
+  '/work/stack86': 'stack86',
+  '/work/taskly': 'taskly',
+};
+
+const SHARE_CARDS = ['portfolio', 'stack86', 'taskly'];
+
 test.describe('page metadata', () => {
   for (const locale of locales) {
     test(`every ${locale.lang} page is titled, described and canonical`, async ({ page }) => {
@@ -27,7 +35,7 @@ test.describe('page metadata', () => {
         await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', title);
         await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
           'content',
-          /og-card\.png$/,
+          new RegExp(`/assets/img/social/${SHARE_CARD[route] ?? 'portfolio'}\\.png$`),
         );
         await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
       }
@@ -81,10 +89,12 @@ test.describe('page metadata', () => {
     expect(trail?.itemListElement).toHaveLength(3);
   });
 
-  test('the social card image is served', async ({ request }) => {
-    const response = await request.get('/assets/img/og-card.png');
+  test('every social card image is served', async ({ request }) => {
+    for (const card of SHARE_CARDS) {
+      const response = await request.get(`/assets/img/social/${card}.png`);
 
-    expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toContain('image/png');
+      expect(response.status(), `${card}.png`).toBe(200);
+      expect(response.headers()['content-type']).toContain('image/png');
+    }
   });
 });

@@ -46,6 +46,7 @@ export const taskly: Project = {
     clip: 'assets/clip/taskly.webm',
     alt: $localize`:@@work.taskly.media.alt:The Taskly Kanban board in dark mode: task cards spread across the Open, To-Do, In Progress, Testing and Done columns.`,
   },
+  shareImage: '/assets/img/social/taskly.png',
   reversed: true,
   languages: ['C#', 'TypeScript'],
 };

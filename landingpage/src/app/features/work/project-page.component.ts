@@ -110,6 +110,7 @@ export class ProjectPageComponent {
         description: found.page.description,
         path: `/work/${found.project.slug}`,
         type: 'article',
+        ...(found.project.shareImage ? { image: found.project.shareImage } : {}),
         graph: ProjectPageComponent.graphFor(found),
       });
     });

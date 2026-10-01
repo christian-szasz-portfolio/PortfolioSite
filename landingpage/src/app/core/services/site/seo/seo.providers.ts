@@ -14,7 +14,7 @@ export function provideSeo(): EnvironmentProviders {
       useValue: {
         siteUrl: siteUrl,
         siteName: 'Christian-Ioan Szasz',
-        defaultImage: '/assets/img/og-card.png',
+        defaultImage: '/assets/img/social/portfolio.png',
         identity: [person],
       },
     },

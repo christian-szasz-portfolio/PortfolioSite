@@ -46,6 +46,7 @@ export const stack86: Project = {
     clip: 'assets/clip/stack86.webm',
     alt: $localize`:@@work.stack86.media.alt:The Stack86 IDE: C source on the left, the generated 8086 assembly on the right, and a build log reporting the pipeline.`,
   },
+  shareImage: '/assets/img/social/stack86.png',
   reversed: false,
   languages: ['C#', 'TypeScript', '8086 assembly'],
 };

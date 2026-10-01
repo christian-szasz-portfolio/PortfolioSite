@@ -29,6 +29,8 @@ export interface Project {
     readonly clip: string | null;
     readonly alt: string;
   };
+  /** The link-preview card for this case study; the site's default card when absent */
+  readonly shareImage?: string;
   /** Puts the screenshot on the other side, alternating down the page */
   readonly reversed: boolean;
   /** The languages this project is written in, for the JSON-LD */

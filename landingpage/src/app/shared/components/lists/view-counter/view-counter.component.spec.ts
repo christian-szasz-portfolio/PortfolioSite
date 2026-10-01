@@ -63,7 +63,9 @@ describe('ViewCounterComponent', () => {
 
     const views = fixture.nativeElement.querySelector('.views') as HTMLElement;
 
-    expect(views.getAttribute('aria-label')).toContain('Total views from everyone');
+    expect(views.getAttribute('aria-label')).toContain(
+      'Total views, counted once a day per browser',
+    );
     expect(views.getAttribute('title')).toBe(views.getAttribute('aria-label'));
     expect(views.getAttribute('data-tip')).toBe(views.getAttribute('aria-label'));
   });
