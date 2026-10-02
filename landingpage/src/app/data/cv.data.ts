@@ -30,9 +30,19 @@ export const cv: Cv = {
       text: $localize`:@@cv.city.value:Sibiu, Romania`,
     },
     {
+      icon: CvContactIcon.Website,
+      label: $localize`:@@cv.website.label:Website`,
+      text: 'christianszasz.dev',
+    },
+    {
       icon: CvContactIcon.Linkedin,
       label: $localize`:@@cv.linkedin.label:LinkedIn`,
       text: '/christian-szasz',
+    },
+    {
+      icon: CvContactIcon.Github,
+      label: $localize`:@@cv.github.label:GitHub`,
+      text: '/christian-szasz-portfolio',
     },
   ],
 

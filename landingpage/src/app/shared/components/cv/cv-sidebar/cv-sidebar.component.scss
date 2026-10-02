@@ -10,7 +10,7 @@
 }
 
 .cv-profile {
-  margin-bottom: 6mm;
+  margin-bottom: 5mm;
   text-align: center;
 
   &__photo {
@@ -52,10 +52,10 @@
 }
 
 .cv-panel {
-  margin-bottom: 6.5mm;
+  margin-bottom: 5.5mm;
 
   &__heading {
-    margin-bottom: 3.5mm;
+    margin-bottom: 3mm;
     padding-bottom: 1.6mm;
     border-bottom: 0.35mm solid var(--cv-blue-tint);
     color: var(--cv-paper);
@@ -71,7 +71,7 @@
   }
 
   &--education &__heading {
-    margin-bottom: 4.5mm;
+    margin-bottom: 4mm;
   }
 
   &--languages {
@@ -84,7 +84,7 @@
     display: flex;
     align-items: center;
     gap: 3mm;
-    min-height: 5.4mm;
+    min-height: 4.9mm;
     color: var(--cv-paper);
     word-break: break-word;
   }

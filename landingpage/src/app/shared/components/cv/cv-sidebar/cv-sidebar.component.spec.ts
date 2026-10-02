@@ -31,6 +31,26 @@ describe('CvSidebarComponent', () => {
     }
   });
 
+  it('gives the site and the GitHub organisation a line each', () => {
+    const lines = Array.from(host.querySelectorAll('.cv-contact__item')).map((item) => ({
+      label: item.querySelector('.cv-contact__icon')?.getAttribute('aria-label'),
+      text: item.querySelector('.cv-contact__text')?.textContent,
+    }));
+
+    expect(lines).toContainEqual({ label: 'Website', text: 'christianszasz.dev' });
+    expect(lines).toContainEqual({ label: 'GitHub', text: '/christian-szasz-portfolio' });
+  });
+
+  // The octocat is drawn on a 16 canvas, so on the 24 the rest use it would sit in one corner
+  it('draws each glyph on the canvas it was drawn for', () => {
+    for (const item of Array.from(host.querySelectorAll('.cv-contact__item'))) {
+      const icon = item.querySelector('.cv-contact__icon');
+      const expected = icon?.getAttribute('aria-label') === 'GitHub' ? '0 0 16 16' : '0 0 24 24';
+
+      expect(icon?.getAttribute('viewBox')).toBe(expected);
+    }
+  });
+
   it('lists the skills, the studies and the languages', () => {
     expect(host.querySelectorAll('.cv-panel--skills .cv-skills__row').length).toBe(
       cv.skills.length,

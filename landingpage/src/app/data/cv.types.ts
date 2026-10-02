@@ -11,7 +11,9 @@ export enum CvContactIcon {
   Phone = 'phone',
   Email = 'email',
   Location = 'location',
+  Website = 'website',
   Linkedin = 'linkedin',
+  Github = 'github',
 }
 
 export interface CvContactLine {

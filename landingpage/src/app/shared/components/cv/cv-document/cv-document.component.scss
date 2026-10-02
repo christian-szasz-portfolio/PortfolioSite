@@ -44,6 +44,11 @@
     font-size: 7.6pt;
   }
 
+  // German runs longest of the three, so it goes a step further to keep the page number on the sheet
+  &:lang(de) {
+    font-size: 7.4pt;
+  }
+
   @media print {
     box-shadow: none;
     page-break-after: avoid;
