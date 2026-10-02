@@ -5,7 +5,7 @@ English, German and Romanian. It is prerendered to static HTML at build time, so
 files a plain web server can hand out, and a crawler receives real content rather than an empty
 shell.
 
-- **Live site:** https://christianszasz.dev (once it is deployed)
+- **Live site:** https://christianszasz.dev
 
 | Path | What it holds |
 | --- | --- |
