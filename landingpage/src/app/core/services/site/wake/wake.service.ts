@@ -9,10 +9,7 @@ import { LocalHostUtils } from '../../../utils/local-host/local-host.utils';
 /** The liveness path every backend answers, and the one this site may read across origins */
 const LIVENESS_PATH = '/health';
 
-/**
- * Wakes the API and both demos the moment a visitor lands, all at once. Each scales to zero and
- * takes most of a minute to start, about as long as a reader spends before clicking through.
- */
+/** Wakes the API and both demos on landing, so their cold starts are over by the first click */
 @Service()
 export class WakeService {
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
