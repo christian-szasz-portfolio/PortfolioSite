@@ -38,8 +38,7 @@ USER $APP_UID
 
 COPY --from=build /app .
 
-# The platform terminates TLS in front of this, so the container serves plain HTTP on 8080.
-ENV ASPNETCORE_URLS=http://+:8080
+# The platform terminates TLS in front of this; the base image already serves plain HTTP on 8080.
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "Analytics.Api.dll"]
