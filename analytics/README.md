@@ -301,6 +301,12 @@ Development. `Analytics.Tools` reads the same settings from environment variable
 Without the file the API still runs and records every view as an unknown country. Attribution
 ("IP geolocation by DB-IP, https://db-ip.com") is shown on the site's `/cookies` page.
 
+The file is copied into the image at build time, so a refresh only reaches production with a
+redeploy of the API. A view that still ends up unknown logs one warning naming the reason: no
+address in the request, an address that could not be read, a private or shared range that belongs
+to no country, or a public address the database has no country for. Never the address itself. The
+daily digest folds them into a count, so a rising "public address" line means the database is stale.
+
 What is downloaded is proved before it is put in place: the fetch is HTTPS-only, the archive is
 refused if it unpacks past 512 MB, and the unpacked file is opened as a country database and asked
 to resolve a known address. Only then does it replace the one already there, so a bad month leaves
