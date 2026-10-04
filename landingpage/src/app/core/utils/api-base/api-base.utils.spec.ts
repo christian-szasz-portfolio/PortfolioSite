@@ -19,3 +19,13 @@ describe('ApiBaseUtils', () => {
     expect(ApiBaseUtils.forHost('localhost.example.com', production)).toBe(`${production}/api`);
   });
 });
+
+describe('ApiBaseUtils.probeFor', () => {
+  it('asks the deployed API at its readiness address, which fails when its storage does', () => {
+    expect(ApiBaseUtils.probeFor('christianszasz.dev', production)).toBe(`${production}/health/ready`);
+  });
+
+  it.each(['localhost', '127.0.0.1', '[::1]'])('asks nothing from a page served on %s, so a local run never reaches production', (host) => {
+    expect(ApiBaseUtils.probeFor(host, production)).toBeNull();
+  });
+});

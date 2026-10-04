@@ -11,6 +11,11 @@ export class ApiBaseUtils {
     return LocalHostUtils.isLocal(hostname) ? '/api' : `${apiOrigin}/api`;
   }
 
+  /** The address a failed API is asked whether it is back, or none where nothing may reach production */
+  public static probeFor(hostname: string, apiOrigin: string): string | null {
+    return LocalHostUtils.isLocal(hostname) ? null : `${apiOrigin}/health/ready`;
+  }
+
   private constructor() {
     // A namespace of statics, never an instance.
   }

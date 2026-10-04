@@ -1,7 +1,7 @@
 import { IMAGE_LOADER } from '@angular/common';
 import { ApplicationConfig, DOCUMENT, ErrorHandler, inject, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideClientHydration, withEventReplay, withI18nSupport } from '@angular/platform-browser';
-import { ANALYTICS_API_BASE, VIEW_COUNTER_API_BASE } from '@christian-szasz-portfolio/common-web';
+import { ANALYTICS_API_BASE, BACKEND_PROBE_URL, VIEW_COUNTER_API_BASE } from '@christian-szasz-portfolio/common-web';
 import { ActivatedRouteSnapshot, provideRouter, withInMemoryScrolling, withPreloading, withRouterConfig, withViewTransitions } from '@angular/router';
 
 import { routes } from './lpg.routes';
@@ -30,6 +30,11 @@ function apiBase(): string {
   return ApiBaseUtils.forHost(inject(DOCUMENT).location?.hostname ?? '', apiUrl);
 }
 
+/** Where a failed API is asked whether it is back: nowhere on this machine. */
+function apiProbe(): string | null {
+  return ApiBaseUtils.probeFor(inject(DOCUMENT).location?.hostname ?? '', apiUrl);
+}
+
 export const lpgConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -40,6 +45,7 @@ export const lpgConfig: ApplicationConfig = {
     provideSeo(),
     { provide: VIEW_COUNTER_API_BASE, useFactory: apiBase },
     { provide: ANALYTICS_API_BASE, useFactory: apiBase },
+    { provide: BACKEND_PROBE_URL, useFactory: apiProbe },
     provideZonelessChangeDetection(),
     provideRouter(
       routes,
