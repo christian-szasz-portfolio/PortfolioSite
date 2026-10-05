@@ -84,9 +84,11 @@ there is nowhere else to read them from.
   dashboard draws instantly without it and the panel says `Unknown` until you press `Check now`.
 - **It reads the same payload the platform probes**, `/health/ready`, rather than an endpoint of
   its own. One source of truth, so the panel cannot say healthy while a probe says otherwise.
-- **Each service is asked on its own.** The dashboard asks all three at once and fills each row
-  as it answers, so a sleeping demo does not hold up the others. A row still waiting after five
-  seconds says it is waking, and each answer shows its round trip, which is the cold start.
+- **One stream, each service on its own.** Pressing the button opens `/api/admin/health/stream`,
+  a server-sent event stream. The admin service asks all three at once and pushes each step as it
+  happens: asking, waking once a service has been silent for five seconds, then its answer with
+  the round trip, which is the cold start. A sleeping demo does not hold up the others, and a
+  final `done` event lets the page close the stream before the browser would reopen it.
 - **The wait outlasts a cold start.** `Admin:HealthTimeout` is 90 seconds by default; a sleeping
   container takes about 50 to answer its first request.
 - **Unreachable is an answer.** A sleeping host, a wrong address or a timeout becomes a sentence

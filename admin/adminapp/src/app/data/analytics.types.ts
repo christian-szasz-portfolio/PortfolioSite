@@ -107,13 +107,13 @@ export interface Health {
 
 /** Where asking one target has got to. */
 export enum HealthPhase {
-  Idle = 'idle',
-  Asking = 'asking',
-  Waking = 'waking',
-  Answered = 'answered',
+  Idle = 'Idle',
+  Asking = 'Asking',
+  Waking = 'Waking',
+  Answered = 'Answered',
 }
 
-/** One target's row in the panel: how far asking has got, and the answer once there is one. */
+/** One target's row in the panel, and one step of the health stream: how far asking has got. */
 export interface TargetCheck {
   readonly target: HealthTarget;
   readonly phase: HealthPhase;

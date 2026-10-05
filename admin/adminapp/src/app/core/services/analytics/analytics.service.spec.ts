@@ -11,7 +11,7 @@ import {
   SyncReport,
   TargetCheck,
 } from '../../../data';
-import { AnalyticsService, wakingAfterMs } from './analytics.service';
+import { AnalyticsService, EVENT_SOURCE, HealthStreamEvent } from './analytics.service';
 
 const ARCHIVE: Overview = {
   archiveLocation: 'C:/archive',
@@ -43,9 +43,39 @@ const HEALTH: Health = {
   workers: [{ name: 'views-flush', ageSeconds: 2, periodSeconds: 5, overdue: false }],
 };
 
-const API_HEALTH = '/api/admin/health/api';
-const TASKLY_HEALTH = '/api/admin/health/taskly';
-const STACK86_HEALTH = '/api/admin/health/stack86';
+/** Stands in for the browser's EventSource, and lets a test push what the service would. */
+class FakeEventSource {
+  public closed = false;
+  private readonly listeners = new Map<string, ((event: Event) => void)[]>();
+
+  public constructor(public readonly url: string) {}
+
+  public addEventListener(name: string, listener: (event: Event) => void): void {
+    this.listeners.set(name, [...(this.listeners.get(name) ?? []), listener]);
+  }
+
+  public close(): void {
+    this.closed = true;
+  }
+
+  public step(check: TargetCheck): void {
+    this.fire(HealthStreamEvent.Step, new MessageEvent('message', { data: JSON.stringify(check) }));
+  }
+
+  public done(): void {
+    this.fire(HealthStreamEvent.Done, new MessageEvent('message', { data: '{}' }));
+  }
+
+  public fail(): void {
+    this.fire('error', new Event('error'));
+  }
+
+  private fire(name: string, event: Event): void {
+    for (const listener of this.listeners.get(name) ?? []) {
+      listener(event);
+    }
+  }
+}
 
 const REPORT: SyncReport = {
   from: '2026-08-09',
@@ -58,10 +88,21 @@ const REPORT: SyncReport = {
 describe('AnalyticsService', () => {
   let service: AnalyticsService;
   let http: HttpTestingController;
+  let stream: FakeEventSource;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: EVENT_SOURCE,
+          useValue: (url: string) => {
+            stream = new FakeEventSource(url);
+            return stream as unknown as EventSource;
+          },
+        },
+      ],
     });
 
     service = TestBed.inject(AnalyticsService);
@@ -144,14 +185,9 @@ describe('AnalyticsService', () => {
       return service.health().find((check) => check.target === target) as TargetCheck;
     }
 
-    function answerTheDemos(): void {
-      http.expectOne(TASKLY_HEALTH).flush({ ...HEALTH, target: HealthTarget.Taskly, workers: [] });
-      http
-        .expectOne(STACK86_HEALTH)
-        .flush({ ...HEALTH, target: HealthTarget.Stack86, workers: [] });
+    function answered(target: HealthTarget): TargetCheck {
+      return { target, phase: HealthPhase.Answered, health: { ...HEALTH, target } };
     }
-
-    afterEach(() => vi.useRealTimers());
 
     it('holds an unasked row for every service', () => {
       expect(service.health().map((check) => check.phase)).toEqual([
@@ -161,82 +197,72 @@ describe('AnalyticsService', () => {
       ]);
     });
 
-    // One call per service, so a sleeping one cannot hold up the others.
-    it('asks every service at once', () => {
+    // One stream for all three, not a request per service.
+    it('opens one stream to the admin service and nothing else', () => {
+      service.checkHealth();
+
+      expect(stream.url).toBe('/api/admin/health/stream');
+      http.expectNone(() => true);
+    });
+
+    // Busy from the press, so the button is disabled before the first step arrives.
+    it('marks every row as asking the moment it is pressed', () => {
       service.checkHealth();
 
       expect(service.health().every((check) => check.phase === HealthPhase.Asking)).toBe(true);
-
-      http.expectOne(API_HEALTH).flush(HEALTH);
-      answerTheDemos();
+      expect(service.checking()).toBe(true);
     });
 
-    it('fills each row as its service answers', () => {
+    it('fills each row with the step the stream pushes for it', () => {
       service.checkHealth();
 
-      http.expectOne(TASKLY_HEALTH).flush({ ...HEALTH, target: HealthTarget.Taskly, workers: [] });
+      stream.step({ target: HealthTarget.Api, phase: HealthPhase.Asking, health: null });
+      stream.step(answered(HealthTarget.Taskly));
+      stream.step({ target: HealthTarget.Stack86, phase: HealthPhase.Waking, health: null });
 
-      expect(row(HealthTarget.Taskly).phase).toBe(HealthPhase.Answered);
       expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Asking);
+      expect(row(HealthTarget.Taskly).health?.status).toBe(HealthStatus.Healthy);
+      expect(row(HealthTarget.Stack86).phase).toBe(HealthPhase.Waking);
       expect(service.checking()).toBe(true);
+    });
 
-      http.expectOne(API_HEALTH).flush(HEALTH);
-      http
-        .expectOne(STACK86_HEALTH)
-        .flush({ ...HEALTH, target: HealthTarget.Stack86, workers: [] });
+    // A finished stream the browser still holds would be reopened, and every service asked again.
+    it('closes the stream once the service says it is done', () => {
+      service.checkHealth();
 
-      expect(row(HealthTarget.Api).health?.status).toBe(HealthStatus.Healthy);
+      for (const target of [HealthTarget.Api, HealthTarget.Taskly, HealthTarget.Stack86]) {
+        stream.step(answered(target));
+      }
+      stream.done();
+
+      expect(stream.closed).toBe(true);
       expect(service.checking()).toBe(false);
     });
 
-    it('says a service that stays silent is waking', () => {
-      vi.useFakeTimers();
+    // The archive draws off local disk and this leaves the machine, so a failure belongs in the
+    // rows that were still waiting rather than across the whole page.
+    it('answers the rows still waiting when the stream fails, and keeps the rest', () => {
       service.checkHealth();
 
-      vi.advanceTimersByTime(wakingAfterMs);
+      stream.step(answered(HealthTarget.Taskly));
+      stream.step({ target: HealthTarget.Api, phase: HealthPhase.Waking, health: null });
+      stream.fail();
 
-      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Waking);
-
-      http.expectOne(API_HEALTH).flush(HEALTH);
-      answerTheDemos();
-
-      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Answered);
-    });
-
-    it('never says waking about a service that has already answered', () => {
-      vi.useFakeTimers();
-      service.checkHealth();
-
-      http.expectOne(API_HEALTH).flush(HEALTH);
-      answerTheDemos();
-      vi.advanceTimersByTime(wakingAfterMs);
-
-      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Answered);
-    });
-
-    // The archive draws off local disk and this call leaves the machine, so a failure here belongs
-    // in the row that asked rather than across the whole page.
-    it('answers an unreachable service in its row rather than as a page error', () => {
-      service.checkHealth();
-
-      http.expectOne(API_HEALTH).error(new ProgressEvent('failed'));
-      answerTheDemos();
-
+      expect(row(HealthTarget.Taskly).health?.reachable).toBe(true);
       expect(row(HealthTarget.Api).health?.reachable).toBe(false);
-      expect(row(HealthTarget.Api).health?.problem).not.toBeNull();
+      expect(row(HealthTarget.Api).health?.problem).toContain('closed the health stream');
       expect(service.error()).toBeNull();
       expect(service.checking()).toBe(false);
+      expect(stream.closed).toBe(true);
     });
 
     // Asking is not what the sync button does, and a slow service must not look like a slow page.
     it('keeps its own busy flag, apart from the one the archive uses', () => {
       service.checkHealth();
+      stream.step({ target: HealthTarget.Api, phase: HealthPhase.Asking, health: null });
 
       expect(service.checking()).toBe(true);
       expect(service.busy()).toBe(false);
-
-      http.expectOne(API_HEALTH).flush(HEALTH);
-      answerTheDemos();
     });
   });
 });

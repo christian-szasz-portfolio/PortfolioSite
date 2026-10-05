@@ -57,6 +57,7 @@ builder.Services.AddSingleton<IAnalyticsSync, AnalyticsSync>();
 // once and covers a container that has to start before it can answer.
 builder.Services.AddHttpClient<IHealthProbe, HttpHealthProbe>((provider, client) =>
     client.Timeout = provider.GetRequiredService<IOptions<AdminOptions>>().Value.HealthTimeout);
+builder.Services.AddTransient<HealthStream>();
 
 builder.Services.AddFastEndpoints();
 

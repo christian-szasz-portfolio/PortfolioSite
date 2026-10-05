@@ -1,21 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Service, computed, inject, signal } from '@angular/core';
+import { InjectionToken, Service, computed, inject, signal } from '@angular/core';
 import {
   EMPTY,
   MonoTypeOperatorFunction,
   Observable,
   catchError,
-  defer,
   finalize,
-  map,
-  merge,
-  of,
-  share,
-  startWith,
   switchMap,
-  takeUntil,
   tap,
-  timer,
 } from 'rxjs';
 
 import {
@@ -32,15 +24,25 @@ import {
 /** Where the local service answers. Relative, because it only ever answers on this machine. */
 const OVERVIEW = '/api/admin/overview';
 const SYNC = '/api/admin/sync';
-const HEALTH = '/api/admin/health';
+const HEALTH_STREAM = '/api/admin/health/stream';
 
-/** How long a target may stay silent before its row says it is waking. */
-export const wakingAfterMs = 5_000;
+/** The events the health stream sends. */
+export enum HealthStreamEvent {
+  Step = 'health',
+  Done = 'done',
+}
+
+/** Opens a server-sent event stream, so a test can hand in its own. */
+export const EVENT_SOURCE = new InjectionToken<(url: string) => EventSource>('EVENT_SOURCE', {
+  providedIn: 'root',
+  factory: () => (url: string) => new EventSource(url),
+});
 
 /** The dashboard's data: the archive loads instantly, and only a sync reaches Azure. */
 @Service()
 export class AnalyticsService {
   private readonly http = inject(HttpClient);
+  private readonly openEventSource = inject(EVENT_SOURCE);
 
   private readonly overviewSignal = signal<Overview | null>(null);
   private readonly busySignal = signal(false);
@@ -96,40 +98,56 @@ export class AnalyticsService {
   }
 
   /**
-   * Asks every deployed service how it is, all at once.
+   * Asks every deployed service how it is, all at once, over one event stream.
    *
-   * One call per service, so a sleeping one does not hold up the rest, and its own busy state:
-   * the archive draws instantly off local disk, and these leave the machine. A failure is
-   * answered in its row rather than thrown, so an unreachable service is a line in the panel
-   * instead of an error across the page.
+   * The admin service pushes each step as it happens, so a sleeping service does not hold up
+   * the rest and the waking notice needs no timer here. A failure is answered in the rows that
+   * were still waiting rather than thrown, so it stays a line in the panel.
    */
   public checkHealth(): void {
-    merge(...healthTargets.map((target) => this.ask(target))).subscribe((check) =>
-      this.healthSignal.update((checks) =>
-        checks.map((row) => (row.target === check.target ? check : row)),
-      ),
+    // Busy from the press, not from the first step, so a second press cannot open a second stream
+    this.healthSignal.set(
+      healthTargets.map((target) => ({ target, phase: HealthPhase.Asking, health: null })),
     );
+
+    this.steps().subscribe({
+      next: (step) => this.place(step),
+      error: (cause: unknown) =>
+        this.healthSignal.update((checks) =>
+          checks.map((row) =>
+            row.phase === HealthPhase.Answered
+              ? row
+              : {
+                  target: row.target,
+                  phase: HealthPhase.Answered,
+                  health: AnalyticsService.unreachable(row.target, cause),
+                },
+          ),
+        ),
+    });
   }
 
-  /** One service's row as it moves from asking, maybe to waking, to its answer. */
-  private ask(target: HealthTarget): Observable<TargetCheck> {
-    return defer(() => {
-      const answer = this.http.get<Health>(`${HEALTH}/${target.toLowerCase()}`).pipe(
-        catchError((cause: unknown) => of(AnalyticsService.unreachable(target, cause))),
-        map((health) => ({ target, phase: HealthPhase.Answered, health })),
-        share(),
+  /** The stream as an observable that closes it when done, before the browser can reconnect. */
+  private steps(): Observable<TargetCheck> {
+    return new Observable<TargetCheck>((subscriber) => {
+      const source = this.openEventSource(HEALTH_STREAM);
+
+      source.addEventListener(HealthStreamEvent.Step, (message) =>
+        subscriber.next(JSON.parse((message as MessageEvent<string>).data) as TargetCheck),
+      );
+      source.addEventListener(HealthStreamEvent.Done, () => subscriber.complete());
+      source.addEventListener('error', () =>
+        subscriber.error(new Error('The admin service closed the health stream early.')),
       );
 
-      // Still silent after a few seconds means a cold start, which is worth saying.
-      const waking = timer(wakingAfterMs).pipe(
-        takeUntil(answer),
-        map(() => ({ target, phase: HealthPhase.Waking, health: null })),
-      );
-
-      return merge(waking, answer).pipe(
-        startWith<TargetCheck>({ target, phase: HealthPhase.Asking, health: null }),
-      );
+      return () => source.close();
     });
+  }
+
+  private place(step: TargetCheck): void {
+    this.healthSignal.update((checks) =>
+      checks.map((row) => (row.target === step.target ? step : row)),
+    );
   }
 
   private readArchive(): Observable<Overview> {
