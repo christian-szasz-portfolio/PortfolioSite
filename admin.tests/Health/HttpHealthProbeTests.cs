@@ -5,10 +5,11 @@ using System.Text;
 using Admin.Api.Configuration;
 using Admin.Api.Health;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Time.Testing;
 using Xunit;
 
 /// <summary>What the dashboard is told about a host it may not even be able to reach.</summary>
-public sealed class HttpAnalyticsHealthTests
+public sealed class HttpHealthProbeTests
 {
     private const string Ready = """
         {
@@ -30,18 +31,28 @@ public sealed class HttpAnalyticsHealthTests
         }
         """;
 
-    private readonly StubHandler handler = new();
+    private const string DemoReady = """{ "status": "ready", "projects": 2 }""";
+
+    private readonly FakeTimeProvider clock = new();
+    private readonly StubHandler handler;
+
+    public HttpHealthProbeTests()
+    {
+        this.handler = new StubHandler(this.clock);
+    }
 
     [Fact]
     public async Task ReadsTheStatusAndEveryCheck()
     {
         this.handler.Answer(HttpStatusCode.OK, Ready);
 
-        AnalyticsHealth health = await this.Read();
+        TargetHealth health = await this.Read();
 
         Assert.True(health.Reachable);
-        Assert.Equal("Degraded", health.Status);
+        Assert.Equal(HealthTarget.Api, health.Target);
+        Assert.Equal(HealthStatus.Degraded, health.Status);
         Assert.Equal(["storage", "workers"], health.Checks.Select(check => check.Name));
+        Assert.Equal(HealthStatus.Healthy, health.Checks[0].Status);
         Assert.Equal("Reachable.", health.Checks[0].Note);
     }
 
@@ -50,7 +61,7 @@ public sealed class HttpAnalyticsHealthTests
     {
         this.handler.Answer(HttpStatusCode.OK, Ready);
 
-        AnalyticsHealth health = await this.Read();
+        TargetHealth health = await this.Read();
 
         Assert.Equal(["usage-flush", "views-flush"], health.Workers.Select(worker => worker.Name));
         Assert.Equal(600, health.Workers[0].AgeSeconds);
@@ -65,19 +76,65 @@ public sealed class HttpAnalyticsHealthTests
     {
         this.handler.Answer(HttpStatusCode.ServiceUnavailable, Ready);
 
-        AnalyticsHealth health = await this.Read();
+        TargetHealth health = await this.Read();
 
         Assert.True(health.Reachable);
         Assert.Equal(2, health.Checks.Count);
     }
 
     [Fact]
-    public async Task SaysSoWhenNoApiIsConfigured()
+    public async Task ReadsADemoThatIsServingAsHealthyWithItsFigures()
     {
-        AnalyticsHealth health = await this.Read(url: string.Empty);
+        this.handler.Answer(HttpStatusCode.OK, DemoReady);
+
+        TargetHealth health = await this.Read(HealthTarget.Taskly);
+
+        Assert.True(health.Reachable);
+        Assert.Equal(HealthStatus.Healthy, health.Status);
+        Assert.Equal("projects 2", Assert.Single(health.Checks).Note);
+        Assert.Empty(health.Workers);
+    }
+
+    [Fact]
+    public async Task ReadsADemoThatSaysAnythingButReadyAsUnhealthy()
+    {
+        this.handler.Answer(HttpStatusCode.OK, """{ "status": "starting" }""");
+
+        TargetHealth health = await this.Read(HealthTarget.Stack86);
+
+        Assert.Equal(HealthStatus.Unhealthy, health.Status);
+        Assert.Equal("starting", Assert.Single(health.Checks).Note);
+    }
+
+    /// <summary>A cold start is the number worth seeing, so the round trip is kept.</summary>
+    [Fact]
+    public async Task KeepsHowLongTheRoundTripTook()
+    {
+        this.handler.Answer(HttpStatusCode.OK, DemoReady);
+        this.handler.Takes = TimeSpan.FromSeconds(48);
+
+        TargetHealth health = await this.Read(HealthTarget.Taskly);
+
+        Assert.Equal(48_000, health.Ms);
+    }
+
+    [Fact]
+    public async Task AsksEachTargetAtItsOwnAddress()
+    {
+        this.handler.Answer(HttpStatusCode.OK, DemoReady);
+
+        await this.Read(HealthTarget.Stack86);
+
+        Assert.Equal("https://stack86.example/health/ready", Assert.Single(this.handler.Asked));
+    }
+
+    [Fact]
+    public async Task SaysSoWhenNoAddressIsConfigured()
+    {
+        TargetHealth health = await this.Read(url: string.Empty);
 
         Assert.False(health.Reachable);
-        Assert.Equal("Unknown", health.Status);
+        Assert.Equal(HealthStatus.Unknown, health.Status);
         Assert.Empty(this.handler.Asked);
     }
 
@@ -87,7 +144,7 @@ public sealed class HttpAnalyticsHealthTests
     {
         this.handler.FailWith = new HttpRequestException("no route to host");
 
-        AnalyticsHealth health = await this.Read();
+        TargetHealth health = await this.Read();
 
         Assert.False(health.Reachable);
         Assert.Contains("could not be reached", health.Problem ?? string.Empty, StringComparison.Ordinal);
@@ -98,19 +155,21 @@ public sealed class HttpAnalyticsHealthTests
     {
         this.handler.FailWith = new TaskCanceledException("timed out");
 
-        AnalyticsHealth health = await this.Read();
+        TargetHealth health = await this.Read(HealthTarget.Taskly);
 
         Assert.False(health.Reachable);
-        Assert.Contains("in time", health.Problem ?? string.Empty, StringComparison.Ordinal);
+        Assert.StartsWith("Taskly did not answer in time", health.Problem ?? string.Empty, StringComparison.Ordinal);
     }
 
     /// <summary>Something that is not this API answers as unreachable rather than throwing.</summary>
-    [Fact]
-    public async Task SaysSoWhenTheAnswerIsNotWhatItExpects()
+    [Theory]
+    [InlineData("<html>a login page</html>")]
+    [InlineData("\"just a string\"")]
+    public async Task SaysSoWhenTheAnswerIsNotWhatItExpects(string body)
     {
-        this.handler.Answer(HttpStatusCode.OK, "<html>a login page</html>");
+        this.handler.Answer(HttpStatusCode.OK, body);
 
-        AnalyticsHealth health = await this.Read();
+        TargetHealth health = await this.Read();
 
         Assert.False(health.Reachable);
     }
@@ -125,17 +184,29 @@ public sealed class HttpAnalyticsHealthTests
         Assert.Equal("http://localhost:5080/health/ready", Assert.Single(this.handler.Asked));
     }
 
-    private Task<AnalyticsHealth> Read(string url = "http://localhost:5080")
+    /// <summary>The default has to outlast a cold start, or every first press reports a timeout.</summary>
+    [Fact]
+    public void WaitsLongerThanAColdStartByDefault()
     {
-        AdminOptions options = new() { AnalyticsApiUrl = url };
+        Assert.True(new AdminOptions().HealthTimeout > TimeSpan.FromSeconds(60));
+    }
 
-        HttpAnalyticsHealth health = new(new HttpClient(this.handler), Options.Create(options));
+    private Task<TargetHealth> Read(HealthTarget target = HealthTarget.Api, string? url = null)
+    {
+        AdminOptions options = new()
+        {
+            AnalyticsApiUrl = target == HealthTarget.Api && url is not null ? url : "http://localhost:5080",
+            TasklyUrl = target == HealthTarget.Taskly && url is not null ? url : "https://taskly.example",
+            Stack86Url = target == HealthTarget.Stack86 && url is not null ? url : "https://stack86.example",
+        };
 
-        return health.ReadAsync(CancellationToken.None);
+        HttpHealthProbe probe = new(new HttpClient(this.handler), Options.Create(options), this.clock);
+
+        return probe.ReadAsync(target, CancellationToken.None);
     }
 
     /// <summary>Answers whatever a test says, and records what it was asked for.</summary>
-    private sealed class StubHandler : HttpMessageHandler
+    private sealed class StubHandler(FakeTimeProvider clock) : HttpMessageHandler
     {
         private HttpStatusCode status = HttpStatusCode.OK;
         private string body = "{}";
@@ -143,6 +214,8 @@ public sealed class HttpAnalyticsHealthTests
         public List<string> Asked { get; } = [];
 
         public Exception? FailWith { get; set; }
+
+        public TimeSpan Takes { get; set; } = TimeSpan.Zero;
 
         public void Answer(HttpStatusCode code, string content)
         {
@@ -154,6 +227,8 @@ public sealed class HttpAnalyticsHealthTests
             HttpRequestMessage request, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(request);
+
+            clock.Advance(this.Takes);
 
             if (this.FailWith is { } failure)
             {

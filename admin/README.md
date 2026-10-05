@@ -76,19 +76,26 @@ older exists here or nowhere. Nothing in the tool removes from the archive.
 
 ## The health panel
 
-Everything else on the page comes off this machine's disk. This one asks the analytics API how it
-is, because heartbeats are what a running process knows about itself and there is nowhere else to
-read them from.
+Everything else on the page comes off this machine's disk. This one asks the analytics API, Taskly
+and Stack86 how they are, because heartbeats are what a running process knows about itself and
+there is nowhere else to read them from.
 
 - **It is pressed, never polled.** In production the API sleeps, and asking is what wakes it. The
   dashboard draws instantly without it and the panel says `Unknown` until you press `Check now`.
 - **It reads the same payload the platform probes**, `/health/ready`, rather than an endpoint of
   its own. One source of truth, so the panel cannot say healthy while a probe says otherwise.
+- **Each service is asked on its own.** The dashboard asks all three at once and fills each row
+  as it answers, so a sleeping demo does not hold up the others. A row still waiting after five
+  seconds says it is waking, and each answer shows its round trip, which is the cold start.
+- **The wait outlasts a cold start.** `Admin:HealthTimeout` is 90 seconds by default; a sleeping
+  container takes about 50 to answer its first request.
 - **Unreachable is an answer.** A sleeping host, a wrong address or a timeout becomes a sentence
   in that panel; the rest of the page is untouched, because none of it needed the API.
-- **`Admin__AnalyticsApiUrl` says where to ask.** `dev/run-admin.cmd` points local mode at
-  `http://localhost:5080`. Live mode takes it from the environment, next to the connection string,
-  and an empty value simply turns the panel off.
+- **`Admin__AnalyticsApiUrl`, `Admin__TasklyUrl` and `Admin__Stack86Url` say where to ask.**
+  `dev/run-admin.cmd` points local mode at the analytics API on `http://localhost:5080` and leaves
+  the demos unset, since both bind port 1998 locally. Live mode takes the API address from the
+  environment and defaults the demos to their public addresses. An empty value leaves that row
+  saying it has nothing to ask.
 
 A worker that never started leaves no beat and no absence to notice, which is the one thing this
 cannot see. The names are worth reading rather than only the colours.

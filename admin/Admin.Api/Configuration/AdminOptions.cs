@@ -1,6 +1,7 @@
 namespace Admin.Api.Configuration;
 
 using System.ComponentModel.DataAnnotations;
+using Admin.Api.Health;
 
 /// <summary>What the admin tool needs to know: where to read from, and where to keep it.</summary>
 public sealed class AdminOptions
@@ -23,9 +24,15 @@ public sealed class AdminOptions
     /// <remarks>Its own address rather than the storage account, because heartbeats live in a process.</remarks>
     public string AnalyticsApiUrl { get; set; } = string.Empty;
 
-    /// <summary>How long to wait for it, which has to cover a sleeping host starting up.</summary>
-    [Range(typeof(TimeSpan), "00:00:01", "00:02:00")]
-    public TimeSpan AnalyticsApiTimeout { get; set; } = TimeSpan.FromSeconds(20);
+    /// <summary>Where the Taskly demo answers. Empty leaves its row unasked.</summary>
+    public string TasklyUrl { get; set; } = string.Empty;
+
+    /// <summary>Where the Stack86 demo answers. Empty leaves its row unasked.</summary>
+    public string Stack86Url { get; set; } = string.Empty;
+
+    /// <summary>How long to wait for a target, above the cold start of about 50 s.</summary>
+    [Range(typeof(TimeSpan), "00:00:01", "00:03:00")]
+    public TimeSpan HealthTimeout { get; set; } = TimeSpan.FromSeconds(90);
 
     /// <summary>How many days a sync asks the API's storage for.</summary>
     [Range(1, 400)]
@@ -58,6 +65,18 @@ public sealed class AdminOptions
         }
 
         return "Azure storage";
+    }
+
+    /// <summary>Where a health target answers, or empty when this run has no address for it.</summary>
+    public string UrlFor(HealthTarget target)
+    {
+        return target switch
+        {
+            HealthTarget.Api => this.AnalyticsApiUrl,
+            HealthTarget.Taskly => this.TasklyUrl,
+            HealthTarget.Stack86 => this.Stack86Url,
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target, null),
+        };
     }
 
     /// <summary>The folder the archive actually uses, resolved once.</summary>

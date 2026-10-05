@@ -2,8 +2,16 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { Health, Overview, SyncReport } from '../../../data';
-import { AnalyticsService } from './analytics.service';
+import {
+  Health,
+  HealthPhase,
+  HealthStatus,
+  HealthTarget,
+  Overview,
+  SyncReport,
+  TargetCheck,
+} from '../../../data';
+import { AnalyticsService, wakingAfterMs } from './analytics.service';
 
 const ARCHIVE: Overview = {
   archiveLocation: 'C:/archive',
@@ -26,12 +34,18 @@ const ARCHIVE: Overview = {
 };
 
 const HEALTH: Health = {
+  target: HealthTarget.Api,
   reachable: true,
   problem: null,
-  status: 'Healthy',
-  checks: [{ name: 'storage', status: 'Healthy', note: 'Reachable.', ms: 4 }],
+  status: HealthStatus.Healthy,
+  ms: 310,
+  checks: [{ name: 'storage', status: HealthStatus.Healthy, note: 'Reachable.', ms: 4 }],
   workers: [{ name: 'views-flush', ageSeconds: 2, periodSeconds: 5, overdue: false }],
 };
+
+const API_HEALTH = '/api/admin/health/api';
+const TASKLY_HEALTH = '/api/admin/health/taskly';
+const STACK86_HEALTH = '/api/admin/health/stack86';
 
 const REPORT: SyncReport = {
   from: '2026-08-09',
@@ -125,35 +139,104 @@ describe('AnalyticsService', () => {
     expect(service.error()).toBeNull();
   });
 
-  it('keeps what the API said about itself', () => {
-    service.checkHealth();
+  describe('health', () => {
+    function row(target: HealthTarget): TargetCheck {
+      return service.health().find((check) => check.target === target) as TargetCheck;
+    }
 
-    http.expectOne('/api/admin/health').flush(HEALTH);
+    function answerTheDemos(): void {
+      http.expectOne(TASKLY_HEALTH).flush({ ...HEALTH, target: HealthTarget.Taskly, workers: [] });
+      http
+        .expectOne(STACK86_HEALTH)
+        .flush({ ...HEALTH, target: HealthTarget.Stack86, workers: [] });
+    }
 
-    expect(service.health()?.status).toBe('Healthy');
-    expect(service.checking()).toBe(false);
-  });
+    afterEach(() => vi.useRealTimers());
 
-  // The archive draws off local disk and this call leaves the machine, so a failure here belongs
-  // in the panel that asked rather than across the whole page.
-  it('answers an unreachable API in the panel rather than as a page error', () => {
-    service.checkHealth();
+    it('holds an unasked row for every service', () => {
+      expect(service.health().map((check) => check.phase)).toEqual([
+        HealthPhase.Idle,
+        HealthPhase.Idle,
+        HealthPhase.Idle,
+      ]);
+    });
 
-    http.expectOne('/api/admin/health').error(new ProgressEvent('failed'));
+    // One call per service, so a sleeping one cannot hold up the others.
+    it('asks every service at once', () => {
+      service.checkHealth();
 
-    expect(service.health()?.reachable).toBe(false);
-    expect(service.health()?.problem).not.toBeNull();
-    expect(service.error()).toBeNull();
-    expect(service.checking()).toBe(false);
-  });
+      expect(service.health().every((check) => check.phase === HealthPhase.Asking)).toBe(true);
 
-  // Asking the API is not what the sync button does, and a slow one must not look like a slow page.
-  it('keeps its own busy flag, apart from the one the archive uses', () => {
-    service.checkHealth();
+      http.expectOne(API_HEALTH).flush(HEALTH);
+      answerTheDemos();
+    });
 
-    expect(service.checking()).toBe(true);
-    expect(service.busy()).toBe(false);
+    it('fills each row as its service answers', () => {
+      service.checkHealth();
 
-    http.expectOne('/api/admin/health').flush(HEALTH);
+      http.expectOne(TASKLY_HEALTH).flush({ ...HEALTH, target: HealthTarget.Taskly, workers: [] });
+
+      expect(row(HealthTarget.Taskly).phase).toBe(HealthPhase.Answered);
+      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Asking);
+      expect(service.checking()).toBe(true);
+
+      http.expectOne(API_HEALTH).flush(HEALTH);
+      http
+        .expectOne(STACK86_HEALTH)
+        .flush({ ...HEALTH, target: HealthTarget.Stack86, workers: [] });
+
+      expect(row(HealthTarget.Api).health?.status).toBe(HealthStatus.Healthy);
+      expect(service.checking()).toBe(false);
+    });
+
+    it('says a service that stays silent is waking', () => {
+      vi.useFakeTimers();
+      service.checkHealth();
+
+      vi.advanceTimersByTime(wakingAfterMs);
+
+      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Waking);
+
+      http.expectOne(API_HEALTH).flush(HEALTH);
+      answerTheDemos();
+
+      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Answered);
+    });
+
+    it('never says waking about a service that has already answered', () => {
+      vi.useFakeTimers();
+      service.checkHealth();
+
+      http.expectOne(API_HEALTH).flush(HEALTH);
+      answerTheDemos();
+      vi.advanceTimersByTime(wakingAfterMs);
+
+      expect(row(HealthTarget.Api).phase).toBe(HealthPhase.Answered);
+    });
+
+    // The archive draws off local disk and this call leaves the machine, so a failure here belongs
+    // in the row that asked rather than across the whole page.
+    it('answers an unreachable service in its row rather than as a page error', () => {
+      service.checkHealth();
+
+      http.expectOne(API_HEALTH).error(new ProgressEvent('failed'));
+      answerTheDemos();
+
+      expect(row(HealthTarget.Api).health?.reachable).toBe(false);
+      expect(row(HealthTarget.Api).health?.problem).not.toBeNull();
+      expect(service.error()).toBeNull();
+      expect(service.checking()).toBe(false);
+    });
+
+    // Asking is not what the sync button does, and a slow service must not look like a slow page.
+    it('keeps its own busy flag, apart from the one the archive uses', () => {
+      service.checkHealth();
+
+      expect(service.checking()).toBe(true);
+      expect(service.busy()).toBe(false);
+
+      http.expectOne(API_HEALTH).flush(HEALTH);
+      answerTheDemos();
+    });
   });
 });

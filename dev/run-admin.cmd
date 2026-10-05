@@ -57,6 +57,10 @@ if not errorlevel 1 (
 
 rem DataRoot is deliberately not set: the default is the real archive.
 
+rem The deployed demos, for the health panel. Public addresses, not secrets.
+if not defined Admin__TasklyUrl set "Admin__TasklyUrl=https://taskly.christianszasz.dev"
+if not defined Admin__Stack86Url set "Admin__Stack86Url=https://stack86.christianszasz.dev"
+
 rem Empty is a working state: the health panel says it has no API to ask rather
 rem than failing, and everything else on the page comes off local disk.
 if not defined Admin__AnalyticsApiUrl (

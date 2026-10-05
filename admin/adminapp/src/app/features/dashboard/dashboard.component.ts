@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { ChartTheme } from '../../core/utils/chart-theme/chart-theme.utils';
-import { Health, Overview } from '../../data';
+import { Overview, TargetCheck } from '../../data';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { CountriesChartComponent } from './countries-chart/countries-chart.component';
 import { DaysTableComponent } from './days-table/days-table.component';
@@ -29,10 +29,10 @@ import { ViewsChartComponent } from './views-chart/views-chart.component';
 export class DashboardComponent {
   public readonly overview = input.required<Overview>();
 
-  /** How the analytics API is, or null until it has been asked. */
-  public readonly health = input<Health | null>(null);
+  /** One row per deployed service, as far as asking it has got. */
+  public readonly health = input<readonly TargetCheck[]>([]);
 
-  /** True while the API is being asked. */
+  /** True while any service is being asked. */
   public readonly checking = input(false);
 
   /** Pressed. The shell decides what asking means. */

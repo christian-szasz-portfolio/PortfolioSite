@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Admin.Api.Archive;
 using Admin.Api.Configuration;
 using Admin.Api.Health;
@@ -54,8 +55,8 @@ builder.Services.AddSingleton<IAnalyticsSync, AnalyticsSync>();
 
 // The one thing here that reaches the network on a read. A typed client, so the timeout is set
 // once and covers a container that has to start before it can answer.
-builder.Services.AddHttpClient<IAnalyticsHealth, HttpAnalyticsHealth>((provider, client) =>
-    client.Timeout = provider.GetRequiredService<IOptions<AdminOptions>>().Value.AnalyticsApiTimeout);
+builder.Services.AddHttpClient<IHealthProbe, HttpHealthProbe>((provider, client) =>
+    client.Timeout = provider.GetRequiredService<IOptions<AdminOptions>>().Value.HealthTimeout);
 
 builder.Services.AddFastEndpoints();
 
@@ -65,7 +66,10 @@ WebApplication app = builder.Build();
 app.UseMiddleware<LoopbackOnlyMiddleware>();
 
 app.UseFastEndpoints(config =>
-    config.Serializer.Options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+{
+    config.Serializer.Options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    config.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
+});
 
 // The dashboard, when it has been built. Without it the API still answers, which is what makes
 // the two halves separately runnable.

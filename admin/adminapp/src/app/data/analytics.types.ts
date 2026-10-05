@@ -57,10 +57,28 @@ export interface SyncReport {
   readonly location: string;
 }
 
-/** One check the analytics API ran, and what it said. */
+/** The deployed services the health panel asks, as the service names them. */
+export enum HealthTarget {
+  Api = 'Api',
+  Taskly = 'Taskly',
+  Stack86 = 'Stack86',
+}
+
+/** Every target, in the order the panel shows them. */
+export const healthTargets: readonly HealthTarget[] = Object.values(HealthTarget);
+
+/** What a target or one of its checks says about itself. */
+export enum HealthStatus {
+  Unknown = 'Unknown',
+  Healthy = 'Healthy',
+  Degraded = 'Degraded',
+  Unhealthy = 'Unhealthy',
+}
+
+/** One check a target ran, and what it said. */
 export interface HealthCheck {
   readonly name: string;
-  readonly status: string;
+  readonly status: HealthStatus;
   readonly note: string | null;
   readonly ms: number;
 }
@@ -73,11 +91,31 @@ export interface HealthWorker {
   readonly overdue: boolean;
 }
 
-/** How the analytics API is, or why it could not be asked. */
+/** How one target is, or why it could not be asked. */
 export interface Health {
+  readonly target: HealthTarget;
   readonly reachable: boolean;
   readonly problem: string | null;
-  readonly status: string;
+  readonly status: HealthStatus;
+
+  /** The round trip, which shows a cold start. */
+  readonly ms: number;
+
   readonly checks: readonly HealthCheck[];
   readonly workers: readonly HealthWorker[];
+}
+
+/** Where asking one target has got to. */
+export enum HealthPhase {
+  Idle = 'idle',
+  Asking = 'asking',
+  Waking = 'waking',
+  Answered = 'answered',
+}
+
+/** One target's row in the panel: how far asking has got, and the answer once there is one. */
+export interface TargetCheck {
+  readonly target: HealthTarget;
+  readonly phase: HealthPhase;
+  readonly health: Health | null;
 }

@@ -11,7 +11,7 @@
   <adm-stat-card [value]="data.views?.total ?? 0" label="Views all time" [accent]="totalAccent" />
 </section>
 
-<adm-health-panel class="stack" [health]="health()" [busy]="checking()" (check)="check.emit()" />
+<adm-health-panel class="stack" [checks]="health()" [busy]="checking()" (check)="check.emit()" />
 
 @if (empty()) {
   <p class="empty">

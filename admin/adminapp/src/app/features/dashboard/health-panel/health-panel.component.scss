@@ -2,67 +2,88 @@
   display: block;
 }
 
-.health__line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 12px;
-}
+.health {
+  &__bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
 
-/*
- * The word, wearing the colour that matches it. Unknown stays muted on purpose: not having asked
- * is not a fault, and a panel that shouts before it has been told anything teaches you to ignore
- * it.
- */
-.health__status {
-  padding: 2px 10px;
-  border: 1px solid var(--axis);
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
+  &__target {
+    padding: 12px 0;
+    border-top: 1px solid var(--axis);
+  }
 
-.health__status--good {
-  border-color: var(--series-3);
-  color: var(--series-3);
-}
+  &__line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
 
-.health__status--warn {
-  border-color: var(--warning);
-  color: var(--warning);
-}
+  &__name {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
 
-.health__status--bad {
-  border-color: var(--critical);
-  color: var(--critical);
-}
+  // Unknown stays muted, so the panel does not shout before it has been told anything
+  &__status {
+    padding: 2px 10px;
+    border: 1px solid var(--axis);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
 
-.health__problem {
-  margin: 0 0 12px;
-  color: var(--ink-2);
-}
+    &--good {
+      border-color: var(--series-3);
+      color: var(--series-3);
+    }
 
-.health__button {
-  padding: 6px 12px;
-  border: 1px solid var(--axis);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
-  cursor: pointer;
-}
+    &--warn {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
 
-.health__button:hover:not(:disabled) {
-  border-color: var(--series-1);
-}
+    &--bad {
+      border-color: var(--critical);
+      color: var(--critical);
+    }
+  }
 
-.health__button:disabled {
-  opacity: 0.6;
-  cursor: default;
+  &__took {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__problem {
+    margin: 0 0 12px;
+    color: var(--ink-2);
+  }
+
+  &__button {
+    padding: 6px 12px;
+    border: 1px solid var(--axis);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: var(--series-1);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
 }
 
 .table + .table {
