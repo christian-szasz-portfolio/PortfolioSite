@@ -1,13 +1,16 @@
 namespace Analytics.Api.Endpoints.Interactions;
 
+using Analytics.Api.Http.Callers;
 using Analytics.Domain.Usage.Abstractions;
 using Analytics.Domain.Usage.Models;
+using Common.Security.Http;
 using FastEndpoints;
 
 /// <summary>Counts what a reader did on the page.</summary>
 /// <remarks>Nothing here identifies anybody, and the catalogue is the allowlist.</remarks>
 public sealed class PostInteractionsEndpoint(
     IInteractionCatalogue catalogue,
+    IExcludedCallers excluded,
     IAnalyticsRecorder analytics,
     TimeProvider time,
     ILogger<PostInteractionsEndpoint> logger)
@@ -22,6 +25,13 @@ public sealed class PostInteractionsEndpoint(
     public override Task HandleAsync(InteractionRequest req, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        // An excluded caller's reports are dropped whole
+        if (excluded.IsExcluded(this.HttpContext.Request.ForwardedFor()))
+        {
+            this.Response = new InteractionReceipt(0, 0);
+            return Task.CompletedTask;
+        }
 
         // One instant for the batch. They arrived together and are counted together, and a clock
         // read per event would only invent a precision the reporting does not have.

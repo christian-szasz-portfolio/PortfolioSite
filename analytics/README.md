@@ -278,6 +278,9 @@ deployment cannot pick up the emulator string by accident.
 - `RateLimitWindow` : the window those permits are counted over, default 1 minute.
 - `TrustedProxyCount` : hops at the right of X-Forwarded-For you control, default 0.
 - `AllowedOrigins` : comma-separated origins allowed to read a response, default none.
+- `ExcludedAddresses` : comma-separated addresses or CIDR ranges whose views and interactions are
+  not counted, default none. Meant for the owner's own visits. The caller is read the same way as
+  for the country, compared in memory and never stored; an excluded view still gets the totals.
 
 ### Secrets
 
@@ -288,6 +291,7 @@ No secret is written in a committed file. Each one comes from the environment th
 | `AzureWebJobsStorage` | The storage account's connection string | Azurite's public development string, in `appsettings.Development.json` | Container Apps secret `storage-connection`, built by the infrastructure repo's `container.bicep` from the account it creates |
 | `Diagnostics:SmtpPassword` | The Gmail app password the digest is sent with | `dotnet user-secrets` | Container Apps secret `smtp-password` |
 | `Diagnostics:TriggerKey` | The key the wake job proves itself with | `dotnet user-secrets`, only to try the endpoint | Container Apps secret `trigger-key` |
+| `ExcludedAddresses` | The owner's own addresses, kept out of the count | not set | Container Apps secret `excluded-addresses` |
 
 User secrets live in the developer's profile, outside the repository, and are read only in
 Development. `Analytics.Tools` reads the same settings from environment variables instead.

@@ -123,6 +123,7 @@ public sealed class PostDigestEndpointTests
         // Every endpoint in the assembly is mapped, so the counter's own need what they take.
         builder.Services.AddSingleton<IViewStore>(new FakeViewStore());
         builder.Services.AddSingleton<IVisitorCountry>(new FakeVisitorCountry());
+        builder.Services.AddSingleton<IExcludedCallers>(new FakeExcludedCallers());
         builder.Services.AddSingleton<IInteractionCatalogue, InteractionCatalogue>();
         builder.Services.AddSingleton<IAnalyticsRecorder>(new InMemoryAnalyticsWindow());
         builder.Services.AddSingleton<IDigestDispatcher>(this.dispatcher);

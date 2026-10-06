@@ -11,6 +11,7 @@ using FastEndpoints;
 public sealed class PostViewsEndpoint(
     IViewStore store,
     IVisitorCountry visitor,
+    IExcludedCallers excluded,
     IAnalyticsRecorder analytics) : EndpointWithoutRequest<ViewStats>
 {
     public override void Configure()
@@ -21,7 +22,16 @@ public sealed class PostViewsEndpoint(
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
-        string country = visitor.Resolve(this.HttpContext.Request.ForwardedFor());
+        string? forwardedFor = this.HttpContext.Request.ForwardedFor();
+
+        // An excluded caller still sees the totals, it just does not add to them
+        if (excluded.IsExcluded(forwardedFor))
+        {
+            this.Response = await store.ReadAsync(cancellationToken);
+            return;
+        }
+
+        string country = visitor.Resolve(forwardedFor);
 
         this.Response = await store.RecordAsync(country, cancellationToken);
 

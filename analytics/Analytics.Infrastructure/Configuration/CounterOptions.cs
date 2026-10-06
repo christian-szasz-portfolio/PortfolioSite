@@ -59,4 +59,8 @@ public sealed class CounterOptions
 
     /// <summary>Origins allowed to read a response, comma separated and matched whole.</summary>
     public string AllowedOrigins { get; set; } = string.Empty;
+
+    /// <summary>Addresses or CIDR ranges whose visits are not counted, comma separated.</summary>
+    /// <remarks>The owner's own visits; set from a secret, never from a committed file.</remarks>
+    public string ExcludedAddresses { get; set; } = string.Empty;
 }

@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddCounterHttp(this IServiceCollection services)
     {
         services.AddSingleton<IVisitorCountry, ForwardedForVisitorCountry>();
+        services.AddSingleton<IExcludedCallers, ConfiguredExcludedCallers>();
 
         services.AddSingleton<ICorsPolicy>(provider => new CorsPolicy(
             provider.GetRequiredService<IOptions<CounterOptions>>().Value.AllowedOrigins));

@@ -130,6 +130,46 @@ public sealed class PostInteractionsEndpointTests
         }
     }
 
+    // The owner's own visits: the page still gets the totals, and nothing is added to them.
+    [Fact]
+    public async Task DoesNotCountAViewFromAnExcludedAddress()
+    {
+        (WebApplication host, HttpClient client, InMemoryAnalyticsWindow window) =
+            await StartAsync(excludedAddress: "203.0.113.7");
+
+        using (host)
+        {
+            using HttpRequestMessage request = new(HttpMethod.Post, new Uri("/api/views", UriKind.Relative));
+            request.Headers.Add("X-Forwarded-For", "203.0.113.7");
+
+            using HttpResponseMessage response = await client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(0, window.Take().Views);
+        }
+    }
+
+    [Fact]
+    public async Task DropsTheInteractionsOfAnExcludedAddress()
+    {
+        (WebApplication host, HttpClient client, InMemoryAnalyticsWindow window) =
+            await StartAsync(excludedAddress: "203.0.113.7");
+
+        using (host)
+        {
+            using HttpRequestMessage request = new(HttpMethod.Post, new Uri("/api/interactions", UriKind.Relative))
+            {
+                Content = JsonContent.Create(new InteractionRequest([new InteractionReport("route", "/cv")]), options: Camel),
+            };
+            request.Headers.Add("X-Forwarded-For", "203.0.113.7");
+
+            using HttpResponseMessage response = await client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(0, window.Take().Interactions);
+        }
+    }
+
     private static Task<HttpResponseMessage> PostAsync(
         HttpClient client, IReadOnlyList<InteractionReport> events)
     {
@@ -139,7 +179,7 @@ public sealed class PostInteractionsEndpointTests
 
     /// <summary>A real host, and a <c>WebApplication</c>, because FastEndpoints maps routes through one.</summary>
     private static async Task<(WebApplication Host, HttpClient Client, InMemoryAnalyticsWindow Window)>
-        StartAsync()
+        StartAsync(string? excludedAddress = null)
     {
         InMemoryAnalyticsWindow window = new();
 
@@ -152,6 +192,7 @@ public sealed class PostInteractionsEndpointTests
         builder.Services.AddSingleton<IAnalyticsRecorder>(window);
         builder.Services.AddSingleton<IViewStore>(new FakeViewStore());
         builder.Services.AddSingleton<IVisitorCountry>(new FakeVisitorCountry());
+        builder.Services.AddSingleton<IExcludedCallers>(new FakeExcludedCallers(excludedAddress));
 
         // Every endpoint in the assembly is mapped, so the wake endpoint needs what it takes.
         // With no key configured it answers 404 and nothing here reaches it.
