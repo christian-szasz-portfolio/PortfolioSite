@@ -83,7 +83,7 @@ export const contact: readonly ContactRow[] = [
     // Three pieces rather than one string, so each can carry the flag of its own region.
     parts: [
       { code: 'RO', text: $localize`:@@contact.languages.ro:Romanian native` },
-      { code: 'DE', text: $localize`:@@contact.languages.de:German native` },
+      { code: 'DE', text: $localize`:@@contact.languages.de:German, full technical proficiency` },
       { code: 'GB', text: $localize`:@@contact.languages.en:English, full technical proficiency` },
     ],
   },

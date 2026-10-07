@@ -88,9 +88,12 @@ export const cv: Cv = {
     },
     {
       name: $localize`:@@cv.german.label:German`,
-      measure: $localize`:@@cv.native.value:Native`,
+      measure: $localize`:@@cv.proficiency.value:Full technical proficiency`,
     },
-    { name: $localize`:@@cv.english.label:English`, measure: 'C1' },
+    {
+      name: $localize`:@@cv.english.label:English`,
+      measure: $localize`:@@cv.proficiency.value:Full technical proficiency`,
+    },
   ],
 
   about: [
