@@ -121,6 +121,11 @@
     font-size: 8.4pt;
     white-space: nowrap;
   }
+
+  // Proficiency levels need a smaller size to share a line with the language
+  &--compact &__years {
+    font-size: 7.8pt;
+  }
 }
 
 .cv-education {
