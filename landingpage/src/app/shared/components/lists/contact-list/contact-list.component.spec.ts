@@ -16,8 +16,8 @@ class Host {
       key: 'Languages',
       parts: [
         { code: 'RO', text: 'Romanian native' },
-        { code: 'DE', text: 'German native, DSD C1' },
-        { code: 'GB', text: 'English C1' },
+        { code: 'DE', text: 'German native' },
+        { code: 'GB', text: 'English, full technical proficiency' },
       ],
     },
   ];
@@ -45,7 +45,7 @@ describe('ContactListComponent', () => {
     expect(values.length).toBe(2);
     expect(values[1].querySelector('a')).toBeNull();
     expect(values[1].textContent.replace(/\s+/g, ' ').trim()).toBe(
-      'Romanian native German native, DSD C1 English C1',
+      'Romanian native German native English, full technical proficiency',
     );
   });
 });
@@ -77,8 +77,8 @@ describe('ContactListComponent marks', () => {
     expect(parts).toHaveLength(3);
     expect(parts.map((part) => part.textContent?.trim())).toEqual([
       'Romanian native',
-      'German native, DSD C1',
-      'English C1',
+      'German native',
+      'English, full technical proficiency',
     ]);
     expect(fixture.nativeElement.querySelectorAll('.contact__part common-flag')).toHaveLength(3);
   });
