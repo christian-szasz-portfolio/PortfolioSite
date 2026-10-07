@@ -82,9 +82,9 @@ export const contact: readonly ContactRow[] = [
     key: $localize`:@@contact.languages.label:Languages`,
     // Three pieces rather than one string, so each can carry the flag of its own region.
     parts: [
-      { code: 'RO', text: $localize`:@@contact.languages.ro:Romanian native` },
-      { code: 'DE', text: $localize`:@@contact.languages.de:German, full technical proficiency` },
-      { code: 'GB', text: $localize`:@@contact.languages.en:English, full technical proficiency` },
+      { code: 'GB', text: $localize`:@@contact.languages.en:English, full professional proficiency` },
+      { code: 'DE', text: $localize`:@@contact.languages.de:German, professional working proficiency` },
+      { code: 'RO', text: $localize`:@@contact.languages.ro:Romanian, native or bilingual proficiency` },
     ],
   },
 ];

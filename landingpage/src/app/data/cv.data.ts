@@ -83,16 +83,16 @@ export const cv: Cv = {
 
   languages: [
     {
-      name: $localize`:@@cv.romanian.label:Romanian`,
-      measure: $localize`:@@cv.native.value:Native`,
+      name: $localize`:@@cv.english.label:English`,
+      measure: $localize`:@@cv.fullProfessional.value:Full professional proficiency`,
     },
     {
       name: $localize`:@@cv.german.label:German`,
-      measure: $localize`:@@cv.proficiency.value:Full technical proficiency`,
+      measure: $localize`:@@cv.professionalWorking.value:Professional working proficiency`,
     },
     {
-      name: $localize`:@@cv.english.label:English`,
-      measure: $localize`:@@cv.proficiency.value:Full technical proficiency`,
+      name: $localize`:@@cv.romanian.label:Romanian`,
+      measure: $localize`:@@cv.native.value:Native or bilingual proficiency`,
     },
   ],
 
