@@ -15,4 +15,8 @@ public sealed class AnalyticsDiagnosticsOptions
     /// <summary>What a scheduler proves itself with at the wake endpoint. Empty turns it off.</summary>
     /// <remarks>A secret: supply it through an environment variable or user secrets, never a file.</remarks>
     public string TriggerKey { get; set; } = string.Empty;
+
+    /// <summary>Sends a short "nothing to report" digest on a day with no usage and no entries, rather than nothing.</summary>
+    /// <remarks>Silence would read the same as a digest that failed to arrive.</remarks>
+    public bool SendQuietDays { get; set; } = true;
 }

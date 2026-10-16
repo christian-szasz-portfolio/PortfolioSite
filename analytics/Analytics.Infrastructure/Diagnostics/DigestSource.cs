@@ -7,17 +7,22 @@ using Analytics.Domain.Usage.Models;
 using Common.Diagnostics.Abstractions;
 using Common.Diagnostics.Capture;
 using Common.Diagnostics.Models;
+using Microsoft.Extensions.Options;
 
 /// <summary>Reads the day's kept entries and its usage into one window.</summary>
 /// <remarks>Two reads, so a digest that fails to send leaves the day exactly as it found it.</remarks>
-public sealed class DigestSource(ILogStore logs, IUsageStore usage) : IDigestSource
+public sealed class DigestSource(ILogStore logs, IUsageStore usage, IOptions<AnalyticsDiagnosticsOptions> options) : IDigestSource
 {
     public async Task<DigestWindow> ReadAsync(DateOnly day, CancellationToken cancellationToken)
     {
         AnalyticsSummary counted = await usage.ReadAsync(day, cancellationToken);
         StoredLog stored = await logs.ReadAsync(day, cancellationToken);
+        bool quiet = !counted.HasAnything && stored.Entries.Count == 0 && stored.Dropped == 0;
 
-        return new DigestWindow(day, stored.Entries, stored.Dropped, FactsFor(counted), counted.HasAnything);
+        // A quiet day goes out without its row of zeroes, so the subject says the day was quiet
+        return quiet
+            ? new DigestWindow(day, [], 0, [], options.Value.SendQuietDays)
+            : new DigestWindow(day, stored.Entries, stored.Dropped, FactsFor(counted), counted.HasAnything);
     }
 
     private static IReadOnlyList<DigestFact> FactsFor(AnalyticsSummary counted)

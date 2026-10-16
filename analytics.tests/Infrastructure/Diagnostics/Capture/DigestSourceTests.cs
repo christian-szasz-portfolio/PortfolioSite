@@ -6,6 +6,7 @@ using Analytics.Infrastructure.Diagnostics;
 using Analytics.Tests.Fakes;
 using Common.Diagnostics.Capture;
 using Common.Diagnostics.Models;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 public sealed class DigestSourceTests
@@ -68,9 +69,30 @@ public sealed class DigestSourceTests
     }
 
     [Fact]
-    public async Task SaysAQuietDayIsQuiet()
+    public async Task SaysAQuietDayIsQuietWhenQuietDaysAreNotSent()
     {
-        Assert.False((await this.Source().ReadAsync(Day, CancellationToken.None)).HasAnything);
+        Assert.False((await this.Source(sendQuietDays: false).ReadAsync(Day, CancellationToken.None)).HasAnything);
+    }
+
+    /// <summary>A quiet day still gets an email, so silence always means something went wrong.</summary>
+    [Fact]
+    public async Task SendsAQuietDayWithoutItsRowOfZeroes()
+    {
+        DigestWindow window = await this.Source().ReadAsync(Day, CancellationToken.None);
+
+        Assert.True(window.HasAnything);
+        Assert.Empty(window.OpeningFacts);
+    }
+
+    /// <summary>A day with only warnings is not quiet: it keeps its figures, zeroes included.</summary>
+    [Fact]
+    public async Task KeepsTheFiguresOnADayWithEntriesButNoUsage()
+    {
+        this.logs.Seed(Day, Note("one"));
+
+        DigestWindow window = await this.Source().ReadAsync(Day, CancellationToken.None);
+
+        Assert.Contains(window.OpeningFacts, fact => fact.Label == "Views" && fact.Value == "0");
     }
 
     /// <summary>Views alone, with no log entries, is still worth a digest.</summary>
@@ -105,8 +127,8 @@ public sealed class DigestSourceTests
             Noon, LogSeverity.Warning, LogDomain.Named("Http"), "Analytics.Api.Http.Thing", message);
     }
 
-    private DigestSource Source()
+    private DigestSource Source(bool sendQuietDays = true)
     {
-        return new DigestSource(this.logs, this.usage);
+        return new DigestSource(this.logs, this.usage, Options.Create(new AnalyticsDiagnosticsOptions { SendQuietDays = sendQuietDays }));
     }
 }
