@@ -94,7 +94,7 @@ public static class DigestPreview
         // All three apps, because one digest now covers all three.
         return
         [
-            Note(PortfolioApps.Analytics, "Analytics.Api.Http.Middleware.RateLimitingMiddleware", LogSeverity.Warning, "Rate limited 8F2A for 41s.", 600),
+            Note(PortfolioApps.Analytics, "Analytics.Api.Http.Middleware.RateLimitingMiddleware", LogSeverity.Warning, "Rate limited 8F2A on GET /api/views.", 600),
             Note(PortfolioApps.Analytics, "Analytics.Api.Http.Middleware.CorsMiddleware", LogSeverity.Warning, "An origin off the allowlist asked to read a response.", 540),
             Failure(PortfolioApps.Analytics, "Analytics.Domain.Views.TableViewStore", "Gave up incrementing the RO counter after 5 attempts.", 420),
             Note(PortfolioApps.Analytics, "Analytics.Infrastructure.Buffering.ViewFlushService", LogSeverity.Warning, "Could not flush 2 buffered countries; they stay buffered.", 400),
