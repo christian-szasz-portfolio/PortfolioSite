@@ -86,6 +86,23 @@
   }
 }
 
-.table + .table {
-  margin-top: 16px;
+// Fixed widths, so the stacked tables of every service line up column for column
+.table {
+  table-layout: fixed;
+
+  & + & {
+    margin-top: 16px;
+  }
+
+  th:first-child {
+    width: 40%;
+  }
+
+  th:last-child {
+    width: 20%;
+  }
+
+  td {
+    overflow-wrap: anywhere;
+  }
 }

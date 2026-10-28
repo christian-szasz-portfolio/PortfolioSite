@@ -68,7 +68,8 @@
     border-bottom: 1px solid var(--grid);
   }
 
-  .table__number {
+  /* Scoped to .table so it outranks `.table th`, or number headers stay left above right-aligned figures */
+  .table .table__number {
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
