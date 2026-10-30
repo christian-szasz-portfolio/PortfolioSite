@@ -1,7 +1,5 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { ViewCounterService, ViewStats } from '@christian-szasz-portfolio/common-web';
 
 import { CookiesContentComponent } from './cookies-content.component';
 
@@ -11,18 +9,7 @@ describe('CookiesContentComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CookiesContentComponent],
-      providers: [
-        provideRouter([]),
-        {
-          provide: ViewCounterService,
-          useValue: {
-            stats: signal<ViewStats | null>(null).asReadonly(),
-            ensureLoaded: (): void => {
-              /* never loads in these specs */
-            },
-          },
-        },
-      ],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CookiesContentComponent);
@@ -37,8 +24,9 @@ describe('CookiesContentComponent', () => {
     expect(headings).toContain('Information stored on your device');
   });
 
-  it('embeds the country breakdown', () => {
-    expect(fixture.nativeElement.querySelector('lpg-view-breakdown')).not.toBeNull();
+  it('credits DB-IP without showing visit figures', () => {
+    expect(fixture.nativeElement.querySelector('a[href="https://db-ip.com"]')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('lpg-view-breakdown')).toBeNull();
   });
 
   it('explains consent', () => {
