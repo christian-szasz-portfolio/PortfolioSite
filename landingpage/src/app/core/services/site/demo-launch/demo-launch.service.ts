@@ -1,7 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { DOCUMENT, PLATFORM_ID, Service, inject, signal } from '@angular/core';
-import { Observable, Subscription, defer, map, of, retry, switchMap, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
-import { fromFetch } from 'rxjs/fetch';
+import { Observable, Subscription, defer, from, map, of, retry, switchMap, takeUntil, tap, throwError, timer } from 'rxjs';
 
 import { LocalHostUtils } from '../../../utils/local-host/local-host.utils';
 import { DemoLaunch, DemoLaunchPhase } from './demo-launch.types';
@@ -13,8 +12,7 @@ const LIVENESS_PATH = '/health';
 const GRACE_MS = 600;
 const TICK_MS = 1000;
 
-/** One liveness attempt may take this long before it is asked again */
-const ATTEMPT_MS = 15_000;
+/** How long after a failed request the next one is made */
 const RETRY_MS = 1500;
 
 /** A cold start measured 47 to 49 seconds, so only well past that is it slow or stalled */
@@ -86,10 +84,13 @@ export class DemoLaunchService {
     this.document.location.assign(url);
   }
 
-  /** Emits once the demo's liveness path answers 2xx, asking again until it does */
+  /**
+   * Emits once the demo's liveness path answers 2xx, asking again only after a request fails.
+   * Never aborts: a sleeping demo holds the request until it is up, and an abort would throw an
+   * AbortError into the page's error handler. Cancelling just stops listening.
+   */
   private alive(origin: string): Observable<true> {
-    return defer(() => fromFetch(`${origin}${LIVENESS_PATH}`, { credentials: 'omit', cache: 'no-store' })).pipe(
-      timeout(ATTEMPT_MS),
+    return defer(() => from(fetch(`${origin}${LIVENESS_PATH}`, { credentials: 'omit', cache: 'no-store' }))).pipe(
       switchMap((response) => (response.ok ? of(true as const) : throwError(() => new Error(`The demo answered ${response.status}`)))),
       retry({ delay: RETRY_MS }),
     );

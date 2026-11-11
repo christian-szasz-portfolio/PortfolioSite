@@ -10,6 +10,7 @@ describe('DemoLaunchService', () => {
   let assign: ReturnType<typeof vi.fn>;
   let answer: () => Promise<Response>;
   let asked: string[];
+  let inits: (RequestInit | undefined)[];
   let original: typeof fetch;
 
   const awake = (): Promise<Response> => Promise.resolve(new Response('{"status":"alive"}'));
@@ -31,9 +32,11 @@ describe('DemoLaunchService', () => {
     assign = vi.fn();
     answer = awake;
     asked = [];
+    inits = [];
     original = globalThis.fetch;
-    globalThis.fetch = ((url: string) => {
+    globalThis.fetch = ((url: string, init?: RequestInit) => {
       asked.push(url);
+      inits.push(init);
       return answer();
     }) as typeof fetch;
   });
@@ -139,6 +142,31 @@ describe('DemoLaunchService', () => {
 
     expect(asked).toHaveLength(askedAtTheEnd);
     expect(service.launch()?.phase).toBe(DemoLaunchPhase.Stalled);
+  });
+
+  it('never aborts a request, so a long wait or a cancel cannot raise an AbortError', async () => {
+    const abort = vi.spyOn(AbortController.prototype, 'abort');
+    answer = () => new Promise<Response>(() => undefined);
+    const service = serviceOn('christianszasz.dev');
+
+    service.open(DEMO, 'Stack86');
+    await vi.advanceTimersByTimeAsync(120_000);
+    service.cancel();
+
+    expect(abort).not.toHaveBeenCalled();
+    expect(inits.every((init) => init?.signal === undefined)).toBe(true);
+    abort.mockRestore();
+  });
+
+  it('keeps one request waiting on a demo that is slow to answer, rather than piling on more', async () => {
+    answer = () => new Promise<Response>(() => undefined);
+    const service = serviceOn('christianszasz.dev');
+
+    service.open(DEMO, 'Stack86');
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(asked).toHaveLength(1);
+    expect(service.launch()?.phase).toBe(DemoLaunchPhase.Slow);
   });
 
   it('opens a demo at once from a page served on this machine, asking nothing', () => {
