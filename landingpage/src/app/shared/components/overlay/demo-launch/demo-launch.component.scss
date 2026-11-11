@@ -19,9 +19,12 @@
     color: var(--ink-muted);
     font-size: var(--step--1);
     pointer-events: auto;
+    // Animations are written outside any @media, which Angular's keyframe renaming cannot follow;
+    // reduced motion switches them off instead
+    animation: demo-launch-in var(--duration) var(--ease);
 
-    @media (prefers-reduced-motion: no-preference) {
-      animation: demo-launch-in var(--duration) var(--ease);
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
     }
   }
 
@@ -38,13 +41,12 @@
       position: absolute;
       inset: 0;
       background-color: var(--accent);
-
-      @media (prefers-reduced-motion: no-preference) {
-        transform: translateX(-100%);
-        animation: demo-launch-slide 1.6s var(--ease) infinite;
-      }
+      transform: translateX(-100%);
+      animation: demo-launch-slide 1.6s var(--ease) infinite;
 
       @media (prefers-reduced-motion: reduce) {
+        transform: none;
+        animation: none;
         opacity: 0.5;
       }
     }
@@ -57,15 +59,27 @@
     font-weight: 600;
   }
 
+  // One dot, then two, then three, then one again; the room for all three is always kept
+  &__dot {
+    &--second {
+      animation: demo-launch-second-dot 1.2s linear infinite;
+    }
+
+    &--third {
+      animation: demo-launch-third-dot 1.2s linear infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &--second,
+      &--third {
+        animation: none;
+      }
+    }
+  }
+
   &__text {
     margin: var(--space-2) 0 0;
     max-width: 46ch;
-  }
-
-  &__seconds {
-    margin-inline-start: var(--space-2);
-    color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
   }
 
   &__actions {
@@ -87,5 +101,29 @@
 @keyframes demo-launch-slide {
   to {
     transform: translateX(100%);
+  }
+}
+
+@keyframes demo-launch-second-dot {
+  0%,
+  32.9% {
+    opacity: 0;
+  }
+
+  33%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes demo-launch-third-dot {
+  0%,
+  65.9% {
+    opacity: 0;
+  }
+
+  66%,
+  100% {
+    opacity: 1;
   }
 }

@@ -9,23 +9,25 @@
         @switch (current.phase) {
           @case (phases.Waking) {
             <span i18n="@@demoLaunch.waking.text"
-              >The demo sleeps when nobody is using it. It opens as soon as it is ready, usually within a minute.</span
+              >The demo needs about a minute to get ready</span
             >
           }
           @case (phases.Slow) {
             <span i18n="@@demoLaunch.slow.text"
-              >Still starting. A demo that has slept for a while takes close to a minute.</span
+              >Almost there. This can take close to a minute</span
             >
           }
           @case (phases.Stalled) {
             <span i18n="@@demoLaunch.stalled.text"
-              >The demo has not answered yet. Keep waiting, or open it anyway.</span
+              >This is taking longer than usual. Keep waiting, or open it now</span
             >
           }
         }
-        @if (current.seconds >= 3) {
-          <span class="demo-launch__seconds" aria-hidden="true">{{ current.seconds }} s</span>
-        }
+        <span class="demo-launch__dots" aria-hidden="true">
+          <span class="demo-launch__dot">.</span>
+          <span class="demo-launch__dot demo-launch__dot--second">.</span>
+          <span class="demo-launch__dot demo-launch__dot--third">.</span>
+        </span>
       </p>
 
       <div class="demo-launch__actions">
@@ -43,7 +45,7 @@
           (click)="openNow()"
           i18n="@@demoLaunch.open.cta"
         >
-          Open anyway
+          Open now
         </button>
       </div>
     </div>

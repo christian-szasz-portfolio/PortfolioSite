@@ -46,11 +46,23 @@ describe('DemoLaunchComponent', () => {
     expect(fixture.nativeElement.querySelector('.demo-launch__card')).toBeNull();
   });
 
-  it('names the demo that is starting and says why it takes a moment', () => {
+  it('names the demo that is starting and says how long it takes', () => {
     const { fixture } = setup(starting(DemoLaunchPhase.Waking, 1));
 
-    expect(text(fixture, '.demo-launch__heading')).toBe('Starting the Stack86 demo');
-    expect(text(fixture, '.demo-launch__text')).toBe('The demo sleeps when nobody is using it. It opens as soon as it is ready, usually within a minute.');
+    expect(text(fixture, '.demo-launch__heading')).toBe('Getting the Stack86 demo ready');
+    expect(text(fixture, '.demo-launch__text')).toContain('The demo needs about a minute to get ready');
+  });
+
+  it('ends the message with three dots, hidden from a screen reader, which the styles count up one by one', () => {
+    const { fixture } = setup(starting(DemoLaunchPhase.Waking, 1));
+
+    const dots = fixture.nativeElement.querySelector('.demo-launch__text > .demo-launch__dots') as HTMLElement;
+
+    expect(dots.getAttribute('aria-hidden')).toBe('true');
+    expect(dots.previousElementSibling?.textContent).toBe('The demo needs about a minute to get ready');
+    expect(dots.querySelectorAll('.demo-launch__dot')).toHaveLength(3);
+    expect(dots.querySelector('.demo-launch__dot--second')).not.toBeNull();
+    expect(dots.querySelector('.demo-launch__dot--third')).not.toBeNull();
   });
 
   it('changes its wording as the wait gets longer', () => {
@@ -58,23 +70,17 @@ describe('DemoLaunchComponent', () => {
 
     launch.set(starting(DemoLaunchPhase.Slow, 12));
     fixture.detectChanges();
-    expect(text(fixture, '.demo-launch__text')).toContain('Still starting.');
+    expect(text(fixture, '.demo-launch__text')).toContain('Almost there.');
 
     launch.set(starting(DemoLaunchPhase.Stalled, 50));
     fixture.detectChanges();
-    expect(text(fixture, '.demo-launch__text')).toContain('The demo has not answered yet.');
+    expect(text(fixture, '.demo-launch__text')).toContain('This is taking longer than usual.');
   });
 
-  it('counts the seconds only once the wait is noticeable, and hides the count from a screen reader', () => {
-    const { fixture, launch } = setup(starting(DemoLaunchPhase.Waking, 2));
-    expect(fixture.nativeElement.querySelector('.demo-launch__seconds')).toBeNull();
+  it('shows no count of seconds, whatever the wait', () => {
+    const { fixture } = setup(starting(DemoLaunchPhase.Slow, 40));
 
-    launch.set(starting(DemoLaunchPhase.Waking, 7));
-    fixture.detectChanges();
-
-    const seconds = fixture.nativeElement.querySelector('.demo-launch__seconds') as HTMLElement;
-    expect(seconds.textContent?.trim()).toBe('7 s');
-    expect(seconds.getAttribute('aria-hidden')).toBe('true');
+    expect(text(fixture, '.demo-launch__card')).not.toMatch(/\d+\s*s\b/);
   });
 
   it('cancels from the Cancel button and from the Escape key', () => {
@@ -86,11 +92,11 @@ describe('DemoLaunchComponent', () => {
     expect(cancel).toHaveBeenCalledTimes(2);
   });
 
-  it('opens the demo from the Open anyway button', () => {
+  it('opens the demo from the Open now button', () => {
     const { fixture, openNow } = setup(starting(DemoLaunchPhase.Stalled, 50));
 
     const open = fixture.nativeElement.querySelector('.button--primary') as HTMLButtonElement;
-    expect(open.textContent?.trim()).toBe('Open anyway');
+    expect(open.textContent?.trim()).toBe('Open now');
     open.click();
 
     expect(openNow).toHaveBeenCalledTimes(1);

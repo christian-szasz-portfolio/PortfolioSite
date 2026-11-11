@@ -21,7 +21,7 @@ export class DemoLaunchComponent {
 
   /** Named in the component, because a translator needs the whole sentence */
   protected heading(title: string): string {
-    return $localize`:@@demoLaunch.heading:Starting the ${title}:title: demo`;
+    return $localize`:@@demoLaunch.heading:Getting the ${title}:title: demo ready`;
   }
 
   protected cancel(): void {
