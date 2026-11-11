@@ -7,6 +7,7 @@ import { ChipListComponent } from '../../../shared/components/lists/chip-list/ch
 import { IconComponent } from '../../../shared/components/marks/icon/icon.component';
 import { MediaFrameComponent } from '../../../shared/components/media/media-frame/media-frame.component';
 import { PageHeaderComponent } from '../../../shared/components/headings/page-header/page-header.component';
+import { DemoLinkDirective } from '../../../shared/directives/demo-link/demo-link.directive';
 import { MagneticDirective } from '../../../shared/directives/magnetic/magnetic.directive';
 import { DemoUrlPipe } from '../../../shared/pipes/demo-url/demo-url.pipe';
 import { ReadingTimePipe } from '../../../shared/pipes/reading-time/reading-time.pipe';
@@ -19,6 +20,7 @@ import { TiltStrength } from '../../../shared/directives/tilt/tilt.directive';
   imports: [
     BreadcrumbsComponent,
     ChipListComponent,
+    DemoLinkDirective,
     DemoUrlPipe,
     GithubIconComponent,
     IconComponent,

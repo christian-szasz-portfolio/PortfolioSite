@@ -50,6 +50,15 @@ describe('LpgComponent', () => {
     expect(wakes).toBe(1);
   });
 
+  it('loads the demo waiting notice after the page, beside the shell, rather than with it', async () => {
+    expect(document.querySelector('lpg-demo-launch')).toBeNull();
+
+    await fixture.whenStable();
+
+    await vi.waitFor(() => expect(document.querySelector('lpg-demo-launch')).not.toBeNull());
+    expect(fixture.nativeElement.querySelector('lpg-demo-launch')).toBeNull();
+  });
+
   it('offers a skip link before anything else on the page', () => {
     const first = fixture.nativeElement.firstElementChild as HTMLAnchorElement;
 

@@ -1,0 +1,91 @@
+.demo-launch {
+  position: fixed;
+  z-index: 65; // above the consent bar, below the CDK dialog overlay
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  pointer-events: none; // the page behind stays scrollable; only the card takes clicks
+
+  &__card {
+    position: relative;
+    overflow: hidden;
+    width: min(100%, 28rem);
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-1);
+    box-shadow: var(--shadow-card);
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    pointer-events: auto;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: demo-launch-in var(--duration) var(--ease);
+    }
+  }
+
+  // A track along the top edge; the fill slides across it while the demo starts
+  &__bar {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 3px;
+    background-color: var(--line);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--accent);
+
+      @media (prefers-reduced-motion: no-preference) {
+        transform: translateX(-100%);
+        animation: demo-launch-slide 1.6s var(--ease) infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &__heading {
+    margin: 0;
+    color: var(--ink);
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  &__text {
+    margin: var(--space-2) 0 0;
+    max-width: 46ch;
+  }
+
+  &__seconds {
+    margin-inline-start: var(--space-2);
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-block-start: var(--space-4);
+  }
+}
+
+@keyframes demo-launch-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@keyframes demo-launch-slide {
+  to {
+    transform: translateX(100%);
+  }
+}

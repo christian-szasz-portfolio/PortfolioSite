@@ -1,9 +1,9 @@
 import { ViewportScroller } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DOCUMENT, afterNextRender, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ViewContainerRef, afterNextRender, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AnalyticsService, BrowserEnvironment, CursorComponent, GrainComponent, ScrollProgressComponent, ScrollService } from '@christian-szasz-portfolio/common-web';
-import { filter, map } from 'rxjs';
+import { filter, from, map } from 'rxjs';
 
 // Straight from its file, not the data barrel: see data/index.ts
 import { interaction } from './data/interaction.data';
@@ -44,6 +44,8 @@ export class LpgComponent {
   private readonly environment = inject(BrowserEnvironment);
   private readonly analytics = inject(AnalyticsService);
   private readonly wake = inject(WakeService);
+  private readonly view = inject(ViewContainerRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   /** Which section is being read, from the spies on the sections themselves */
   private readonly sections = inject(ActiveSectionService);
@@ -123,6 +125,11 @@ export class LpgComponent {
 
       // After the first paint, so the wake never competes with the page itself
       this.wake.wakeAll();
+
+      // Only a click on a demo link needs it, so it loads on its own, after the page
+      from(import('./shared/components/overlay/demo-launch/demo-launch.component'))
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(({ DemoLaunchComponent }) => this.view.createComponent(DemoLaunchComponent));
     });
   }
 }

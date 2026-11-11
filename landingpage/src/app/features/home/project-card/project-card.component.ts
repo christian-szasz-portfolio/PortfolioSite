@@ -6,6 +6,7 @@ import { interaction, Project } from '../../../data';
 import { ChipListComponent } from '../../../shared/components/lists/chip-list/chip-list.component';
 import { IconComponent } from '../../../shared/components/marks/icon/icon.component';
 import { MediaFrameComponent } from '../../../shared/components/media/media-frame/media-frame.component';
+import { DemoLinkDirective } from '../../../shared/directives/demo-link/demo-link.directive';
 import { DriftDepth, DriftDirective } from '../../../shared/directives/drift/drift.directive';
 import { MagneticDirective } from '../../../shared/directives/magnetic/magnetic.directive';
 import { DemoUrlPipe } from '../../../shared/pipes/demo-url/demo-url.pipe';
@@ -23,6 +24,7 @@ export enum ProjectCardVariant {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ChipListComponent,
+    DemoLinkDirective,
     DemoUrlPipe,
     DriftDirective,
     GithubIconComponent,

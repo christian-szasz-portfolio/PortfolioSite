@@ -37,7 +37,7 @@
         }
 
         @if (item.demo) {
-          <a class="link link--demo" [href]="item.demo | demoUrl" lpgMagnetic>
+          <a class="link link--demo" [href]="item.demo | demoUrl" [lpgDemoLink]="item.title" lpgMagnetic>
             <lpg-icon name="demo" />
             <ng-container i18n="@@project.demo.cta">Open the live demo</ng-container>
           </a>
